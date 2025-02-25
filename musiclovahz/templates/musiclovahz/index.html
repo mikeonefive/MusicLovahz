@@ -1,0 +1,18 @@
+{% extends "musiclovahz/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <h4 class="pl-4 mt-3 mb-3">Index</h4>
+        {% if user.is_authenticated %}
+            {% include "musiclovahz/showrandomprofile.html" %}
+        {% else %}
+            <div class="text-center mt-5">
+                Please <a href="{% url 'register' %}">register here!</a>
+            </div>
+
+            <div class="text-center">
+                Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+            </div>
+        {% endif %}
+
+{% endblock %}
