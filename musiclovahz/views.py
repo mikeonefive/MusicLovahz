@@ -64,4 +64,30 @@ def register(request):
 
 
 def index(request):
-    return HttpResponse("This is the index page!")
+
+    if request.user.is_authenticated:
+        return find_matching_profiles(request)
+    else:
+        return render(request, "musiclovahz/login.html")
+
+
+@login_required
+def find_matching_profiles(request):
+    current_user = request.user
+    # print(current_user.songs.all())
+
+    # Find users who have any song in common with current_user, but exclude current_user
+    matching_user = User.objects.filter(songs__in=current_user.songs.all()).exclude(id=current_user.id)
+
+    return render(request, "musiclovahz/show_profiles.html", {
+        "matches": matching_user
+    })
+
+
+@login_required
+def show_matches(request):
+    current_user = request.user
+
+    return render(request, "musiclovahz/show_profiles.html", {
+        "matches": current_user.matches.all()
+    })
