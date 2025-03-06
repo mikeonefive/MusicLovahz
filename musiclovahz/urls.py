@@ -9,7 +9,7 @@ urlpatterns = [
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
 
-    path("find_matching_profiles", views.find_matching_profiles, name="find_matching_profiles"),
+    path("find_matching_profiles", views.find_matching_profiles_and_update, name="find_matching_profiles"),
     path("show_matches", views.show_matches, name="show_matches"),
-    path("check_mutual_likes", views.check_mutual_likes, name="check_mutual_likes")
+    path("check_mutual_likes", views.get_mutual_likes, name="check_mutual_likes")
 ]

@@ -14,13 +14,13 @@ class User(AbstractUser):
     matches = models.ManyToManyField("self",
                                     blank=True)
 
-    def clean(self):
-        if self.matches.filter(id=self.id).exists():
-            raise ValidationError("You cannot like yourself.")
-
-    def save(self, *args, **kwargs):
-        self.clean()  # Ensure validation runs on save
-        super().save(*args, **kwargs)
+    # def clean(self):
+    #     if self.matches.filter(id=self.id).exists():
+    #         raise ValidationError("You cannot like yourself.")
+    #
+    # def save(self, *args, **kwargs):
+    #     self.clean()  # Ensure validation runs on save
+    #     super().save(*args, **kwargs)
 
     def __str__(self):
         return f"username: {self.username}"

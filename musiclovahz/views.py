@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 from .models import User
 import json
 
-from .utils import update_matches, check_mutual_likes
+from .utils import update_matches, get_mutual_likes, find_users_by_songs
 
 
 def login_view(request):
@@ -66,53 +66,39 @@ def register(request):
 
 
 def index(request):
-
     if request.user.is_authenticated:
-        return find_matching_profiles(request)
+        return find_matching_profiles_and_update(request)
     else:
         return render(request, "musiclovahz/login.html")
 
 
 @login_required
-def find_matching_profiles(request):
+def find_matching_profiles_and_update(request):
     current_user = request.user
+    mutual_likes = None
 
-    # find users who have any song in common with current_user, but exclude current_user
-    matching_users = User.objects.filter(
-        songs__in=current_user.songs.all()
-    ).exclude(id=current_user.id)
+    # find users who have songs in common with current_user
+    song_mates = find_users_by_songs(current_user)
 
-    # if 2 users have a song in common, check if they like each other
-    if matching_users:
-        check_mutual_likes(current_user)
+    # if 2 users have songs in common, check if they like each other and update database
+    if song_mates:
+        mutual_likes = get_mutual_likes(current_user)
 
-
+        if mutual_likes:
+            update_matches(current_user, song_mates)
 
     return render(request, "musiclovahz/show_profiles.html", {
-        "matches": matching_users
+        "matches": mutual_likes
     })
 
-
-@login_required
-def return_mutual_likes(request):
-    current_user = request.user
-
-    # find mutual likes (users that both like and are liked by the current user)
-    mutual_likes = current_user.likes.filter(liked_by=current_user)
-
     # convert users to a list of dicts for JSON response
-    mutual_like_list = list(mutual_likes.values("id", "username"))
-
-    return JsonResponse({"mutual_likes": mutual_like_list})
+    # mutual_like_list = list(mutual_likes.values("id", "username"))
+    # return JsonResponse({"mutual_likes": mutual_like_list})
 
 
 @login_required
 def show_matches(request):
     current_user = request.user
-
-
-    # print(current_user.matches.all())
-
     return render(request, "musiclovahz/show_profiles.html", {
         "matches": current_user.matches.all()
     })
