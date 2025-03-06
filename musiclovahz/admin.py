@@ -9,8 +9,7 @@ class SongAdmin(admin.ModelAdmin):
 
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ("username", "email")
-    filter_horizontal = ("songs",)  # Allows selecting songs in a multi-select widget
-    filter_horizontal = ("matches",)
+    filter_horizontal = ("songs", "likes", "matches")  # Allows selecting songs in a multi-select widget
 
 
 admin.site.register(User, CustomUserAdmin)

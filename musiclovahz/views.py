@@ -10,6 +10,8 @@ from django.shortcuts import get_object_or_404
 from .models import User
 import json
 
+from .utils import update_matches, check_mutual_likes
+
 
 def login_view(request):
     if request.method == "POST":
@@ -74,19 +76,42 @@ def index(request):
 @login_required
 def find_matching_profiles(request):
     current_user = request.user
-    # print(current_user.songs.all())
 
-    # Find users who have any song in common with current_user, but exclude current_user
-    matching_user = User.objects.filter(songs__in=current_user.songs.all()).exclude(id=current_user.id)
+    # find users who have any song in common with current_user, but exclude current_user
+    matching_users = User.objects.filter(
+        songs__in=current_user.songs.all()
+    ).exclude(id=current_user.id)
+
+    # if 2 users have a song in common, check if they like each other
+    if matching_users:
+        check_mutual_likes(current_user)
+
+
 
     return render(request, "musiclovahz/show_profiles.html", {
-        "matches": matching_user
+        "matches": matching_users
     })
+
+
+@login_required
+def return_mutual_likes(request):
+    current_user = request.user
+
+    # find mutual likes (users that both like and are liked by the current user)
+    mutual_likes = current_user.likes.filter(liked_by=current_user)
+
+    # convert users to a list of dicts for JSON response
+    mutual_like_list = list(mutual_likes.values("id", "username"))
+
+    return JsonResponse({"mutual_likes": mutual_like_list})
 
 
 @login_required
 def show_matches(request):
     current_user = request.user
+
+
+    # print(current_user.matches.all())
 
     return render(request, "musiclovahz/show_profiles.html", {
         "matches": current_user.matches.all()
