@@ -10,25 +10,6 @@
     height: auto;                  /* maintain aspect ratio */
 }
 
-
-/* NEW POST FORM STYLES */
-
-.new-post-form {
-    margin-bottom: 2vh;
-    padding: 1.5vw;
-}
-
-.new-post-form textarea {
-    height: 15vh;
-    resize: vertical;
-    margin-bottom: 1vw;
-}
-
-.submit-container {
-    margin-top: 15px;
-}
-
-
 /* LIKE BUTTON AND LIKE COUNT APPEARANCE */
 .like-container {
     display: inline-flex; /* ensures button and count are aligned horizontally */
@@ -44,22 +25,7 @@
     box-shadow: none;
 }
 
-.like-symbol {
-    max-width: 1.3vw;
+.like-icon {
+    max-width: 2.2vw;
     height: auto;
 }
-
-.edit-post-button {
-    padding: 0;
-}
-
-.edit-post-button:focus {
-    box-shadow: none;
-}
-
-/* SHOW ALL POSTS */
-.post-content-style {
-    color: dodgerblue;
-}
-
-

@@ -5,13 +5,36 @@
     <h4 class="pl-4 mt-3 mb-3">Show Profiles</h4>
         {% if user.is_authenticated %}
 
+            <div class="container">
             {% if matches %}
-                {% for match in matches %}
-                    {{ match }}
-                {% endfor %}
+
+                <div class="row">
+
+                    {% for match in matches %}
+                        <div class="col-md-4 col-sm-6 mb-4"> <!-- Grid columns -->
+
+                            <div class="card p-3 shadow-sm text-center"> <!-- Bootstrap card for profile -->
+                                <p class="text-muted small mb-0">{{ match.username }}</p>
+
+                                <div class="like-container d-flex justify-content-center mt-2">
+                                    <button class="btn like-button mr-4" data-profile-id="{{ match.id }}" data-liked="{{ match.liked_by_user_status }}">
+                                        <img src="{% static 'musiclovahz/likewhite.png' %}" class="like-icon" alt="like icon">
+                                    </button>
+
+                                    <!-- UNLIKE BUTTON -->
+                                    <button class="btn like-button" data-profile-id="{{ match.id }}" data-liked="{{ match.liked_by_user_status }}">
+                                        <img src="{% static 'musiclovahz/unlike.png' %}" class="like-icon" alt="unlike icon">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
             {% else %}
-                {% include "musiclovahz/showrandomprofile.html" %}
+                <p class="text-center text-muted">No profiles to show</p>
             {% endif %}
+            </div>
 
         {% else %}
 
