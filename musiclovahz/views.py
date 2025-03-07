@@ -75,20 +75,25 @@ def index(request):
 @login_required
 def find_matching_profiles_and_update(request):
     current_user = request.user
-    mutual_likes = None
 
     # find users who have songs in common with current_user
     song_mates = find_users_by_songs(current_user)
+    # print(f"Song mates: {song_mates}")
 
     # if 2 users have songs in common, check if they like each other and update database
     if song_mates:
         mutual_likes = get_mutual_likes(current_user)
+        # print(f"Mutual likes: {mutual_likes}")
 
         if mutual_likes:
-            update_matches(current_user, song_mates)
+            update_matches(current_user, mutual_likes)
+            # show the matches page
+            return render(request, "musiclovahz/show_profiles.html", {
+                "matches": mutual_likes
+            })
 
     return render(request, "musiclovahz/show_profiles.html", {
-        "matches": mutual_likes
+        "matches": song_mates
     })
 
     # convert users to a list of dicts for JSON response

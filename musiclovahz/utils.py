@@ -28,12 +28,12 @@ def find_users_by_songs(current_user):
     return matching_users
 
 
-def update_matches(current_user, matching_users):
-    current_user.matches.add(*matching_users)  # unpack queryset and add matches to the profile
+def update_matches(current_user, mutual_likes):
+    current_user.matches.add(*mutual_likes)  # unpack queryset and add matches to the profile
     current_user.save()
 
     # add current_user to all matching users' matches
-    for user in matching_users:
+    for user in mutual_likes:
         user.matches.add(current_user)
         user.save()  # save each user after adding current_user to their matches
 
@@ -42,5 +42,5 @@ def update_matches(current_user, matching_users):
 
 def get_mutual_likes(current_user):
     # find mutual likes (users that both like and are liked by the current user)
-    mutual_likes = current_user.likes.filter(liked_by=current_user)                 # return User.objects.filter(likes=current_user, liked_by=current_user)
+    mutual_likes = User.objects.filter(likes=current_user, liked_by=current_user)
     return mutual_likes

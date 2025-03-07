@@ -7,12 +7,12 @@ class User(AbstractUser):
     songs = models.ManyToManyField("Song", related_name="users", blank=True)
 
     likes = models.ManyToManyField("self",
-                                   symmetrical=False,       # allows unidirectional relationships (e.g., A likes B, but B may not like A)
+                                   symmetrical=False,              # allows unidirectional relationships (e.g., A likes B, but B may not like A)
                                    related_name="liked_by",
                                    blank=True)
 
     matches = models.ManyToManyField("self",
-                                    blank=True)
+                                    blank=True, symmetrical=True)  # `symmetrical=True` ensures bidirectional relationships
 
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
 
