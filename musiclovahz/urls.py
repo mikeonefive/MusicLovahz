@@ -1,5 +1,6 @@
-
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 from . import views
 
@@ -13,3 +14,6 @@ urlpatterns = [
     path("show_matches", views.show_matches, name="show_matches"),
     path("check_mutual_likes", views.get_mutual_likes, name="check_mutual_likes")
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

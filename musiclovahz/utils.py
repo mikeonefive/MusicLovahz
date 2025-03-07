@@ -1,8 +1,8 @@
-
 from django.db.models import Count
 from .models import User
-from ..project5.settings import NUMBER_OF_MUTUAL_SONGS
 
+# CONSTANTS
+NUMBER_OF_MUTUAL_SONGS = 3
 
 def find_users_by_songs(current_user):
     # matching_users = (User.objects.filter(
@@ -23,7 +23,6 @@ def find_users_by_songs(current_user):
                                                                                                                         # filter=models.Q(songs__in=current_user.songs.all()) → Ensures we only count songs that match with current_user
                                                                                                                         # Q = query object
         .filter(shared_songs__gte=NUMBER_OF_MUTUAL_SONGS)  # change this number if you want at least 3 common songs
-        .distinct()
     )
 
     return matching_users

@@ -14,6 +14,8 @@ class User(AbstractUser):
     matches = models.ManyToManyField("self",
                                     blank=True)
 
+    profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+
     # def clean(self):
     #     if self.matches.filter(id=self.id).exists():
     #         raise ValidationError("You cannot like yourself.")
