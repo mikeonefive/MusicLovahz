@@ -8,13 +8,13 @@
             <div class="container">
             {% if matches %}
 
-                <div class="row d-flex justify-content-center align-items-center"> <!-- Center the rows of cards -->
+                <div class="row d-flex justify-content-center align-items-center"> <!-- center the rows of cards -->
                     {% for user in matches %}
 
                         <!-- likes songs card-->
                         {% include "musiclovahz/song_likes.html" %}
 
-                        <!-- profile card -->
+                        <!-- profile card with like/unlike button -->
                         {% include "musiclovahz/profile.html"%}
 
                         <!-- songs in common card -->
@@ -22,7 +22,7 @@
 
                     {% endfor %}
                 </div>
-                
+
             {% else %}
                 <p class="text-center text-muted">No profiles to show</p>
             {% endif %}

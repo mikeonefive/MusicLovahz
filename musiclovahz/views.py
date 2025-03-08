@@ -1,13 +1,15 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 
+from .forms import CustomUserCreationForm
 from .models import User
 import json
 
@@ -39,31 +41,18 @@ def logout_view(request):
 
 
 def register(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        email = request.POST["email"]
-
-        # Ensure password matches confirmation
-        password = request.POST["password"]
-        confirmation = request.POST["confirmation"]
-        if password != confirmation:
-            return render(request, "musiclovahz/register.html", {
-                "message": "Passwords must match."
-            })
-
-        # Attempt to create new user
-        try:
-            user = User.objects.create_user(username, email, password)
-            user.save()
-        except IntegrityError:
-            return render(request, "musiclovahz/register.html", {
-                "message": "Username already taken."
-            })
-        login(request, user)
-        return HttpResponseRedirect(reverse("index"))
-
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST, request.FILES)  # handles file uploads too
+        if form.is_valid():
+            user = form.save()  # automatically saves all fields, including profile_picture
+            login(request, user)
+            return redirect("index")  # redirect after successful registration
+        else:
+            print(form.errors)
     else:
-        return render(request, "musiclovahz/register.html")
+        form = CustomUserCreationForm()
+
+    return render(request, "musiclovahz/register.html", {"form": form})
 
 
 def index(request):
@@ -113,6 +102,9 @@ def find_matching_profiles_and_update(request):
 @login_required
 def show_matches(request):
     current_user = request.user
+    songs_in_common = find_songs_in_common(current_user)
+
     return render(request, "musiclovahz/show_profiles.html", {
-        "matches": current_user.matches.all()
+        "matches": current_user.matches.all(),
+        "songs_in_common": songs_in_common
     })

@@ -31,7 +31,7 @@ def find_users_by_songs(current_user):
 def find_songs_in_common(current_user):
     matching_users = find_users_by_songs(current_user)
     mutual_songs = Song.objects.filter(users__in=matching_users).filter(users=current_user).distinct()
-    return mutual_songs
+    return mutual_songs if mutual_songs.exists() else []
 
 
 def update_matches(current_user, mutual_likes):
