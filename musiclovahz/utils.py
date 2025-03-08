@@ -1,5 +1,6 @@
 from django.db.models import Count
 from .models import User, Song
+import re
 
 # CONSTANTS
 NUMBER_OF_MUTUAL_SONGS = 3
@@ -50,3 +51,8 @@ def get_users_who_like_each_other(current_user):
     # find mutual likes (users that both like and are liked by the current user)
     mutual_likes = User.objects.filter(likes=current_user, liked_by=current_user)
     return mutual_likes
+
+
+def smart_title_case(text):
+    # This regex pattern will fix cases like "it's" by preserving the apostrophe
+    return re.sub(r"(\w+('[a-zA-Z]+)?)", lambda m: m.group(0).capitalize(), text)

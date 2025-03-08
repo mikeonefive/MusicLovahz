@@ -13,7 +13,7 @@
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="logo-container">
-                <a class="navbar-brand" href="#"><img src="{% static 'musiclovahz/newlogo.png' %}" alt="MusicLovahz logo" class="logo"></a>
+                <a class="navbar-brand" href="#"><img src="{% static 'musiclovahz/logo.png' %}" alt="MusicLovahz logo" class="logo"></a>
             </div>
             <div>
               <ul class="navbar-nav mr-auto">
@@ -29,6 +29,9 @@
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'show_matches' %}">Matches</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'edit_profile' %}">Edit Profile</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>

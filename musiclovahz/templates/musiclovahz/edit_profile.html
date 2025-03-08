@@ -1,0 +1,44 @@
+{% extends "musiclovahz/layout.html" %}
+
+{% block title %}
+    Edit Profile
+{% endblock %}
+
+
+{% block body %}
+
+    <div class="pl-4 mt-3">
+     <form action="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data">
+
+        {% csrf_token %}
+         <div class="pl-2 mt-3">
+            <div class="form-group w-25">
+                <input class="form-control" autofocus type="text" name="username" placeholder="Username" value="{{ form.username.value }}">
+            </div>
+
+            <div class="form-group w-25">
+                <input class="form-control" type="file" name="profile_picture" placeholder="Profile Picture">
+            </div>
+         </div>
+
+        <hr>
+
+         <div class="pl-4 mt-5">
+            <h5>Add a New Song</h5>
+            <div class="form-group w-25">
+                <input class="form-control" autofocus type="text" name="title" placeholder="title">
+            </div>
+
+            <div class="form-group w-25">
+                <input class="form-control" autofocus type="text" name="artist" placeholder="artist">
+            </div>
+         </div>
+
+        <div class="d-flex justify-content-center mt-3">
+            <button class="btn btn-secondary" type="submit">Save Changes</button>
+        </div>
+    </form>
+
+    </div>
+
+{% endblock %}

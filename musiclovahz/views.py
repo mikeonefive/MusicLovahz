@@ -1,19 +1,18 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
 from django.core.paginator import Paginator
-from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 
-from .forms import CustomUserCreationForm
-from .models import User
+from .forms import CustomUserCreationForm, UserProfileForm
+from .models import User, Song
 import json
 
-from .utils import update_matches, get_users_who_like_each_other, find_users_by_songs, find_songs_in_common
+from .utils import update_matches, get_users_who_like_each_other, find_users_by_songs, find_songs_in_common, \
+    smart_title_case
 
 
 def login_view(request):
@@ -60,6 +59,36 @@ def index(request):
         return find_matching_profiles_and_update(request)
     else:
         return render(request, "musiclovahz/login.html")
+
+
+@login_required
+def edit_profile(request):
+    user = request.user
+    if request.method == "POST":
+        form = UserProfileForm(request.POST, request.FILES, instance=user)      # makes sure the form is pre-filled with the current user's info
+
+        title = smart_title_case(request.POST.get("title").strip())             # get title from form
+        artist = request.POST.get("artist").upper().strip()                     # get artist name from form
+
+        if form.is_valid():
+            # save the user profile, excluding the songs field
+            updated_user = form.save(commit=False)  # save without committing to database yet
+            updated_user.save()                     # save the user object first
+
+            # if user entered a song, add it to their profile
+            if title and artist:
+                song, was_newly_added = Song.objects.get_or_create(title=title, artist=artist)  # if song exists, it won’t duplicate; if not, it creates a new one
+                # new_song, created = Song.objects.get_or_create(title=title, artist=artist) created stores a boolean if we created a new song or if it was retrieved from the database
+                user.songs.add(song)  # Add song to user's profile
+
+            return redirect("index")
+
+    else:
+        form = UserProfileForm(instance=user)                                  # pre-fill with existing user data
+
+    return render(request, "musiclovahz/edit_profile.html", {
+        "form": form
+    })
 
 
 @login_required
