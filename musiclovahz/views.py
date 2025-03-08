@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -10,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from .models import User
 import json
 
-from .utils import update_matches, get_mutual_likes, find_users_by_songs
+from .utils import update_matches, get_users_who_like_each_other, find_users_by_songs, find_songs_in_common
 
 
 def login_view(request):
@@ -78,27 +79,35 @@ def find_matching_profiles_and_update(request):
 
     # find users who have songs in common with current_user
     song_mates = find_users_by_songs(current_user)
-    # print(f"Song mates: {song_mates}")
+
+    # find out which songs they have in common
+    songs_in_common = find_songs_in_common(current_user)
+
+    # split posts into pages with Paginator
+    paginator = Paginator(song_mates, 1)  # show 1 profile per page
+    page_number = request.GET.get('page')
+    current_page = paginator.get_page(page_number)
 
     # if 2 users have songs in common, check if they like each other and update database
     if song_mates:
-        mutual_likes = get_mutual_likes(current_user)
-        # print(f"Mutual likes: {mutual_likes}")
+        users_that_like_each_other = get_users_who_like_each_other(current_user)
 
-        if mutual_likes:
-            update_matches(current_user, mutual_likes)
+        if users_that_like_each_other:
+            update_matches(current_user, users_that_like_each_other)
             # show the matches page
             return render(request, "musiclovahz/show_profiles.html", {
-                "matches": mutual_likes
+                "matches": users_that_like_each_other,
+                "songs_in_common": songs_in_common
             })
 
     return render(request, "musiclovahz/show_profiles.html", {
-        "matches": song_mates
+        "matches": current_page,
+        "songs_in_common": songs_in_common
     })
 
     # convert users to a list of dicts for JSON response
-    # mutual_like_list = list(mutual_likes.values("id", "username"))
-    # return JsonResponse({"mutual_likes": mutual_like_list})
+    # mutual_like_list = list(users_that_like_each_other.values("id", "username"))
+    # return JsonResponse({"users_that_like_each_other": mutual_like_list})
 
 
 @login_required

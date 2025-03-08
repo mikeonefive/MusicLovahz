@@ -1,0 +1,14 @@
+{% block body %}
+    {% if songs_in_common %}
+    <div class="col-md-4 col-sm-6 mb-4 mt-4"> <!-- Grid column for songs in common -->
+        <div class="card bg-light border-0 p-3 text-center">
+            <p>
+                <p class="text-muted mb-1"> You have these songs in common with {{ user.username }} </p>
+                {% for song in songs_in_common %}
+                    <p class="text-muted small mb-0"> "{{ song.title }}" by {{ song.artist }} </p>
+                {% endfor %}
+            </p>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

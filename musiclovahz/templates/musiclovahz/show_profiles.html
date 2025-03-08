@@ -2,42 +2,50 @@
 {% load static %}
 
 {% block body %}
-    <h4 class="pl-4 mt-3 mb-3">Show Profiles</h4>
+
         {% if user.is_authenticated %}
 
             <div class="container">
             {% if matches %}
 
-                <div class="row">
+                <div class="row d-flex justify-content-center align-items-center"> <!-- Center the rows of cards -->
+                    {% for user in matches %}
 
-                    {% for match in matches %}
-                        <div class="col-md-4 col-sm-6 mb-4"> <!-- Grid columns -->
+                        <!-- likes songs card-->
+                        {% include "musiclovahz/song_likes.html" %}
 
-                            <div class="card p-3 shadow-sm text-center"> <!-- Bootstrap card for profile -->
-                                <p class="text-muted small mb-0">{{ match.username }}</p>
+                        <!-- profile card -->
+                        {% include "musiclovahz/profile.html"%}
 
-                                <div class="like-container d-flex justify-content-center mt-2">
-                                    <button class="btn like-button mr-4" data-profile-id="{{ match.id }}" data-liked="{{ match.liked_by_user_status }}">
-                                        <img src="{% static 'musiclovahz/likewhite.png' %}" class="like-icon" alt="like icon">
-                                    </button>
+                        <!-- songs in common card -->
+                        {% include "musiclovahz/songs_in_common.html" %}
 
-                                    <!-- UNLIKE BUTTON -->
-                                    <button class="btn like-button" data-profile-id="{{ match.id }}" data-liked="{{ match.liked_by_user_status }}">
-                                        <img src="{% static 'musiclovahz/unlike.png' %}" class="like-icon" alt="unlike icon">
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     {% endfor %}
-
                 </div>
+                
             {% else %}
                 <p class="text-center text-muted">No profiles to show</p>
             {% endif %}
             </div>
 
-        {% else %}
+        <!-- Pagination frontend, only 1 profile per page -->
+        <nav aria-label="Page navigation">
+          <ul class="pagination d-flex justify-content-center">
+              {% if matches.has_previous %}
+                <li class="page-item">
+                    <a class="page-link text-white bg-danger" href="?page={{ matches.previous_page_number }}">Previous Profile</a>
+                </li>
+              {% endif %}
 
+              {% if matches.has_next %}
+                <li class="page-item">
+                    <a class="page-link text-white bg-success" href="?page={{ matches.next_page_number }}">Next Profile</a>
+                </li>
+              {% endif %}
+          </ul>
+        </nav>
+
+        {% else %}
             <div class="text-center mt-5">
                 Please <a href="{% url 'register' %}">register here!</a>
             </div>

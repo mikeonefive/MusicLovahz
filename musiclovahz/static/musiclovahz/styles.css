@@ -10,10 +10,17 @@
     height: auto;                  /* maintain aspect ratio */
 }
 
-/* LIKE BUTTON AND LIKE COUNT APPEARANCE */
+/* USER PROFILE */
+.profile-picture {
+    max-width: 12vw;
+    height: auto;
+}
+
+
+/* LIKE BUTTON APPEARANCE */
 .like-container {
-    display: inline-flex; /* ensures button and count are aligned horizontally */
-    align-items: center; /* Vertically aligns items */
+    display: inline-flex;       /* ensures button and count are aligned horizontally */
+    align-items: center;        /* Vertically aligns items */
 }
 
 .like-button {
@@ -21,7 +28,7 @@
     margin-bottom: 0.5vh;
 }
 
-.like-button:focus { /* removes a focus thing (blue border) from the like buttons */
+.like-button:focus {            /* removes a focus thing (blue border) from the like buttons */
     box-shadow: none;
 }
 
@@ -29,3 +36,4 @@
     max-width: 2.2vw;
     height: auto;
 }
+

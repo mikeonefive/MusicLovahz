@@ -1,0 +1,20 @@
+{% load static %}
+{% block body %}
+    <div class="col-md-4 col-sm-6 mb-4 mt-5"> <!-- grid columns -->
+        <div class="card bg-light border-0 p-3 text-center"> <!-- bootstrap card for profile -->
+
+            {% if user.profile_picture %}
+                <p>
+                    <img class="profile-picture" src="{{ user.profile_picture.url }}" alt="{{ user.username }}'s profile picture">
+                </p>
+            {% else %}
+                <p>
+                    <img class="profile-picture" src="{% static 'path/to/default/profile-pic.jpg' %}" alt="Default profile picture">
+                </p>
+            {% endif %}
+
+            {% include "musiclovahz/likebuttons.html"%}
+
+        </div>
+    </div>
+{% endblock %}
