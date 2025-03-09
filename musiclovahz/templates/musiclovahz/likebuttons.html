@@ -1,13 +1,14 @@
 {% load static %}
 
 {% block body %}
+    <!-- LIKE BUTTON -->
     <div class="like-container d-flex justify-content-center mt-0">
-        <button class="btn like-button mr-5" data-profile-id="{{ user.id }}" data-liked="{{ user.liked_by_user_status }}">
-            <img src="{% static 'musiclovahz/likewhite.png' %}" class="like-icon" alt="like icon">
+        <button class="btn like-button mr-5" data-profile-id="{{ user.id }}">
+            <img src="{% static 'musiclovahz/like.png' %}" class="like-icon" alt="like icon">
         </button>
 
         <!-- UNLIKE BUTTON -->
-        <button class="btn like-button" data-profile-id="{{ user.id }}" data-liked="{{ user.liked_by_user_status }}">
+        <button class="btn unlike-button" data-profile-id="{{ user.id }}">
             <img src="{% static 'musiclovahz/unlike.png' %}" class="like-icon" alt="unlike icon">
         </button>
     </div>

@@ -1,8 +1,8 @@
 {% block body %}
 
     <div class="col-md-4 col-sm-6 mb-4 mt-3"> <!-- grid column for songs in common -->
-        <div class="card bg-light border-0 p-3 text-center">
-            <p class="text-muted mb-1"> {{ user.username }} likes</p>
+        <div class="card bg-dark border-0 p-3 text-center">
+            <p class="text-light mb-1"> {{ user.username }} likes</p>
                 {% for song in user.songs.all %}
                     <p class="text-muted small mb-0"> "{{ song.title }}" by {{ song.artist }} </p>
                 {% endfor %}

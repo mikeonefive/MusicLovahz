@@ -18,8 +18,8 @@ class UserProfileForm(forms.ModelForm):
 
 
 class CustomUserCreationForm(UserCreationForm):
-    profile_picture = forms.ImageField(required=False)  # Allow users to upload a profile picture (optional)
+    profile_picture = forms.ImageField(required=False)  # allow users to upload a profile picture
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2', 'profile_picture']  # Add any other fields you want in registration
+        fields = ['username', 'email', 'password1', 'password2', 'profile_picture']
