@@ -48,6 +48,8 @@ async function updateLikes(event) {
     }
 
     
+    // TODO update match section dynamically here with a function (fetch call to backend matches which should return a JSON)
+
 
     // if (response.ok) {
     //     const data = await response.json();

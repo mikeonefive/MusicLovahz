@@ -1,11 +1,19 @@
+{% load custom_filters %}
+
 {% block body %}
 
     <div class="col-md-4 col-sm-6 mb-4 mt-4"> <!-- Grid column for songs in common -->
         <div class="card bg-secondary bg-gradient border-0 p-3 text-center">
                 <p class="text-light mb-1"> You and {{ user.username }} like</p>
-                {% for song in songs_in_common %}
+
+                 <!-- Custom filter for Django we registered(templatetags/custom_filters):
+                 the keys in this dictionary are users (not just their usernames, but the whole user object),
+                 and the values are lists of mutual songs that the logged-in user shares with those users -->
+
+                {% for song in songs_in_common|get_item:user %}
                     <p class="small mb-0"> "{{ song.title }}" by {{ song.artist }} </p>
                 {% endfor %}
+
         </div>
     </div>
 

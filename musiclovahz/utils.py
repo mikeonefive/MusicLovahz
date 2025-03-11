@@ -28,19 +28,20 @@ def find_users_by_songs(current_user):
         .order_by('id')  # ensure consistent order for pagination
     )
 
-    print(matching_users)
-
+    # print(matching_users)
     return matching_users
 
 
-def find_songs_in_common(current_user):
-    matching_users = find_users_by_songs(current_user)
-    mutual_songs = (Song.objects.filter(users__in=matching_users)
+def find_songs_in_common(current_user, matched_user):
+    mutual_songs = (Song.objects
                     .filter(users=current_user)
+                    .filter(users=matched_user)
                     .distinct())
+    print(f"Songs in common function: {mutual_songs}")
     return mutual_songs if mutual_songs.exists() else []
 
 
+# TODO returns the wrong songs, if you like 1 more song than your match it is a common liked song!!! (see above function)
 def find_songs_in_common_for_matches(current_user):
     matches = (
         User.objects.filter(

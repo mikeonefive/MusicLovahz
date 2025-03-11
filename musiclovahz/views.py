@@ -97,13 +97,15 @@ def find_matching_profiles(request):
     # find users who have songs in common with current_user
     song_mates = find_users_by_songs(current_user)
 
-    # find out which songs they have in common
-    songs_in_common = find_songs_in_common(current_user)
+    # Dictionary: {matched_user: mutual_songs}
+    songs_in_common = {
+        user: find_songs_in_common(current_user, user) for user in song_mates
+    }
 
     # split into pages with Paginator
-    # paginator = Paginator(song_mates, 1)  # show 1 profile per page
-    # page_number = request.GET.get('page')
-    # current_page = paginator.get_page(page_number)
+    paginator = Paginator(song_mates, 1)  # show 1 profile per page
+    page_number = request.GET.get('page')
+    current_page = paginator.get_page(page_number)
 
     # print(f"Found {len(song_mates)} song mates")
 
@@ -114,7 +116,7 @@ def find_matching_profiles(request):
     # print(f"Matches being passed to template: {song_mates}")
 
     return render(request, "musiclovahz/show_profiles.html", {
-        "matches": song_mates,
+        "matches": current_page,
         "songs_in_common": songs_in_common
     })
 
@@ -167,7 +169,6 @@ def like_unlike_profile(request, user_id):
 
         loggedin_user.likes.add(profile_to_update)
         return JsonResponse({"user_id": user_id, "liked": f"{profile_to_update}"})
-
 
     elif request.method == "DELETE":
 
