@@ -41,21 +41,6 @@ def find_songs_in_common(current_user, matched_user):
     return mutual_songs if mutual_songs.exists() else []
 
 
-# TODO returns the wrong songs, if you like 1 more song than your match it is a common liked song!!! (see above function)
-def find_songs_in_common_for_matches(current_user):
-    matches = (
-        User.objects.filter(
-            songs__in=current_user.songs.all()
-        )
-        .exclude(id=current_user.id)
-        .annotate(shared_songs=Count("songs",
-                                     distinct=True))
-        .filter(shared_songs__gte=NUMBER_OF_MUTUAL_SONGS)
-    )
-    mutual_songs = Song.objects.filter(users__in=matches).filter(users=current_user).distinct()
-    return mutual_songs if mutual_songs.exists() else []
-
-
 def update_matches(current_user, mutual_likes):
     current_user.matches.add(*mutual_likes)  # unpack queryset and add matches to the profile
     current_user.save()
@@ -76,6 +61,6 @@ def get_users_who_like_each_other(current_user):
     return mutual_likes
 
 
-def smart_title_case(text):
+def convert_to_smart_title_case(text):
     # This regex pattern will fix cases like "it's" by preserving the apostrophe
     return re.sub(r"(\w+('[a-zA-Z]+)?)", lambda m: m.group(0).capitalize(), text)

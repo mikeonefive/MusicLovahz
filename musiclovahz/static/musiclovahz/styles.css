@@ -37,6 +37,11 @@
 }
 
 .like-icon {
-    max-width: 2.8vw;
+    width: 2.8vw;
     height: auto;
+    transition: all 0.3s ease;
+}
+
+.like-icon:hover {
+    transform: scale(1.4);          /* grows without affecting layout */
 }

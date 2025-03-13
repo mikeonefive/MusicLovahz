@@ -12,7 +12,7 @@ from .models import User, Song
 import json
 
 from .utils import update_matches, get_users_who_like_each_other, find_songs_in_common, \
-    smart_title_case, find_songs_in_common_for_matches, find_users_by_songs
+    convert_to_smart_title_case, find_users_by_songs
 
 
 def login_view(request):
@@ -67,8 +67,8 @@ def edit_profile(request):
     if request.method == "POST":
         form = UserProfileForm(request.POST, request.FILES, instance=user)      # makes sure the form is pre-filled with the current user's info
 
-        title = smart_title_case(request.POST.get("title").strip())             # get title from form
-        artist = request.POST.get("artist").upper().strip()                     # get artist name from form
+        title = convert_to_smart_title_case(request.POST.get("title").strip())             # get title from form
+        artist = request.POST.get("artist").upper().strip()                                # get artist name from form
 
         if form.is_valid():
             # save the user profile, excluding the songs field
@@ -144,12 +144,15 @@ def check_mutual_like_and_update_data(request, current_user,songs_in_common):
 @login_required
 def show_matches(request):
     current_user = request.user
-    songs_in_common = find_songs_in_common_for_matches(current_user)
+    all_matches = current_user.matches.all()
 
+    songs_in_common = {
+        user: find_songs_in_common(current_user, user) for user in all_matches
+    }
     # print(current_user.matches.all())
 
     return render(request, "musiclovahz/show_profiles.html", {
-        "matches": current_user.matches.all(),
+        "matches": all_matches,
         "songs_in_common": songs_in_common
     })
 
