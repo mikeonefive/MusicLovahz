@@ -37,7 +37,7 @@ def find_songs_in_common(current_user, matched_user):
                     .filter(users=current_user)
                     .filter(users=matched_user)
                     .distinct())
-    print(f"Songs in common function: {mutual_songs}")
+    # print(f"Songs in common function: {mutual_songs}")
     return mutual_songs if mutual_songs.exists() else []
 
 
@@ -59,6 +59,22 @@ def get_users_who_like_each_other(current_user):
                     .filter(likes=current_user, liked_by=current_user)
                     .exclude(id__in=current_user.matches.all()))
     return mutual_likes
+
+
+def check_mutual_like_and_update_data(current_user):
+    users_that_like_each_other = get_users_who_like_each_other(current_user)
+    # print(f"users like each other: {users_that_like_each_other} & {current_user}")
+
+    if users_that_like_each_other.exists():  # exists is more efficient because it doesn't get all the data
+        # print(f"Mutual likes exist, updating matches.")
+
+        update_matches(current_user, users_that_like_each_other)
+
+        # # show the matches page
+        # return render(request, "musiclovahz/show_profiles.html", {
+        #     "matches": users_that_like_each_other,
+        #     "songs_in_common": songs_in_common
+        # })
 
 
 def convert_to_smart_title_case(text):

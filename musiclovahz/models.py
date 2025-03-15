@@ -28,13 +28,19 @@ class User(AbstractUser):
         return f"username: {self.username}"
                 # f"songs: {[song.serialize() for song in self.songs.all()]}")
 
-    def serialize(self):
+    def serialize(self, matched_user):
+        from .utils import find_songs_in_common                         # import inside method to avoid circular imports
+
+        songs_in_common = find_songs_in_common(self, matched_user)      # call the helper function here so the view is way cleaner
+
         return {
             "id": self.id,
             "username": self.username,
+            "profile_picture": self.profile_picture.url if self.profile_picture else None,
             "songs": [song.serialize() for song in self.songs.all()],
-            "likes": [like.serialize() for like in self.likes.all()],
-            "matches": [match.serialize() for match in self.matches.all()]
+            "likes": [like.id for like in self.likes.all()],
+            "matches": [match.id for match in self.matches.all()],
+            "songs_in_common": [{"title": song.title, "artist": song.artist} for song in songs_in_common],
         }
 
 

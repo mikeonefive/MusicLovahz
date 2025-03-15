@@ -1,7 +1,5 @@
-//  Run main when the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', main);
 
-function main() {
+function addLikeButtonListeners() {
    
     // Select all elements with the class 'like-button'
     const likeButtons = document.querySelectorAll('.like-button');
@@ -44,25 +42,5 @@ async function updateLikes(event) {
 
         const data = await response.json();
         console.log(data);
-        
     }
-
-    
-    // TODO update match section dynamically here with a function (fetch call to backend matches which should return a JSON)
-
-
-    // if (response.ok) {
-    //     const data = await response.json();
-    //     const likeContainer = button.closest(".like-container");            // look for the closest ancestor element of the button (the clicked button) that matches the CSS class .like-container.
-    //     const likeCountElement = likeContainer.querySelector(".badge");     // get the badge which holds the likecount in the frontend
-
-    //     if (likeCountElement) {
-    //         likeCountElement.textContent = data.likecount;                  // Update the displayed like count in the frontend
-    //     }
-
-    //     updateLikeSymbol(button, data);
-
-    // } else {
-    //     alert('Failed to update like count.');
-    // }
 }

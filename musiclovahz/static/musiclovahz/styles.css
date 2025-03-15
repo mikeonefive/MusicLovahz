@@ -12,7 +12,7 @@
 
 /* USER PROFILE */
 .profile-picture {
-    max-width: 14vw;
+    width: 20vw;
     height: auto;
     border-radius: 15px;           /* rounded edges for profile pics */
 }
@@ -38,6 +38,7 @@
 
 .like-icon {
     width: 2.8vw;
+    min-width: 50px;
     height: auto;
     transition: all 0.3s ease;
 }
