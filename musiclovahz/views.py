@@ -65,21 +65,29 @@ def edit_profile(request):
     if request.method == "POST":
         form = UserProfileForm(request.POST, request.FILES, instance=user)      # makes sure the form is pre-filled with the current user's info
 
-        title = convert_to_smart_title_case(request.POST.get("title").strip())             # get title from form
-        artist = request.POST.get("artist").upper().strip()                                # get artist name from form
+        titlesList = request.POST.getlist("title")
+        artistList = request.POST.getlist("artist")
 
         if form.is_valid():
             # save the user profile, excluding the songs field
             updated_user = form.save(commit=False)  # save without committing to database yet
             updated_user.save()                     # save the user object first
 
-            # if user entered a song, add it to their profile
-            if title and artist:
-                song, was_newly_added = Song.objects.get_or_create(title=title, artist=artist)  # if song exists, it won’t duplicate; if not, it creates a new one
-                # new_song, created = Song.objects.get_or_create(title=title, artist=artist) created stores a boolean if we created a new song or if it was retrieved from the database
-                user.songs.add(song)  # Add song to user's profile
+            for title, artist in zip(titlesList, artistList):   # ZIP = built-in function that combines multiple iterables (such as lists, tuples)
+                                                                # into an iterator of tuples
+                                                                # each tuple contains the elements from each iterable at the same index, it "zips" the iterables together based on their positions
+                                                                # Title: Song 1, Artist: Artist 1
+                title = convert_to_smart_title_case(title.strip())
+                artist = artist.upper().strip()
 
-            return redirect("index")
+                # if user entered a song, add it to their profile
+                if title and artist:
+                    song, was_newly_added = Song.objects.get_or_create(title=title, artist=artist)  # if song exists, it won’t duplicate; if not, it creates a new one
+                    # new_song, created = Song.objects.get_or_create(title=title, artist=artist) created stores a boolean if we created a new song or if it was retrieved from the database
+                    user.songs.add(song)    # add song to user's profile
+
+
+            return redirect("index")    # Redirect after saving, outside the for loop
 
     else:
         form = UserProfileForm(instance=user)                                  # pre-fill with existing user data

@@ -24,15 +24,17 @@
         <hr>
 
          <div class="pl-4 mt-5">
-            <h5>Add a New Song</h5>
-            <div class="form-group w-25">
-                <input class="form-control" autofocus type="text" name="title" placeholder="title">
+            <h5>Add Songs</h5>
+
+            <div id="song-input-container">
+                <div class="form-group w-25 song-input">
+                    <input class="form-control mb-1" type="text" name="title" placeholder="Song title">
+                    <input class="form-control" type="text" name="artist" placeholder="Artist">
+                </div>
             </div>
 
-            <div class="form-group w-25">
-                <input class="form-control" autofocus type="text" name="artist" placeholder="artist">
+                <button type="button" class="btn btn-primary" id="add-song-btn">Add another song</button>
             </div>
-         </div>
 
         <div class="d-flex justify-content-center mt-3">
             <button class="btn btn-secondary" type="submit">Save Changes</button>
