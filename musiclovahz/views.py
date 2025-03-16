@@ -10,7 +10,7 @@ from .forms import CustomUserCreationForm, UserProfileForm
 from .models import User, Song
 import json
 
-from .utils import check_mutual_like_and_update_data, find_songs_in_common, convert_to_smart_title_case, find_users_by_songs
+from .utils import check_mutual_like_and_update_data, convert_to_smart_title_case, find_users_by_songs
 
 
 def login_view(request):
@@ -112,19 +112,12 @@ def find_matching_profiles_API(request):
         "has_more": len(song_mates) > 0,
     })
 
-    # return render(request, "musiclovahz/show_profiles.html", {
-    #     "matches": profiles_data
-    # })
-
 
 @login_required
 def show_matches(request):
     current_user = request.user
     all_matches = current_user.matches.all()
 
-    songs_in_common = {
-        user: find_songs_in_common(current_user, user) for user in all_matches
-    }
     # print(current_user.matches.all())
 
     # convert data for JSON response
@@ -133,11 +126,6 @@ def show_matches(request):
     return JsonResponse({
         "profiles": profiles_data
     })
-
-    # return render(request, "musiclovahz/show_profiles.html", {
-    #     "matches": all_matches,
-    #     "songs_in_common": songs_in_common
-    # })
 
 
 @csrf_exempt

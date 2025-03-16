@@ -1,24 +1,29 @@
 document.addEventListener('DOMContentLoaded', main);
 
 
+let currentPage = 1;    // start from the first profile
+
+
 async function main() {
-  await loadProfiles(`/find_matching_profiles/`);
+  // load potential matching profiles on index
+  await loadProfiles(`/find_matching_profiles/`, currentPage);
 
   // add event listener for "Show Matches" button
   document.getElementById('show-matches-btn').addEventListener('click', async (event) => {
-    event.preventDefault();           // prevent default behavior for links (it would return the raw JSON in the browser cause it's a link)
-    await loadProfiles(`/show_matches/`);
+    event.preventDefault();               // prevent default behavior for links (it would return the raw JSON in the browser cause it's a link)
+    currentPage = 1;                      // reset to the first page when clicking "Show Matches"
+    await loadProfiles(`/show_matches/`, currentPage);
   });
 }
 
 
-async function loadProfiles(url) {
+async function loadProfiles(url, currentPage = 1) {   // = 1 is the default if this parameter is not passed in
     try {
-        let response = await fetch(url);
+        let response = await fetch(`${url}?page=${currentPage}`);
         let jsonData = await response.json();
         console.log(jsonData);
         
-        // show the profile in html
+        // show the profile in html, for the first page
         createHTMLViewForProfiles(jsonData);
 
         // add like and unlike button listeners
@@ -39,20 +44,16 @@ function createHTMLViewForProfiles(jsonData) {
 
   // make sure jsonData has profiles
   if (!jsonData.profiles || jsonData.profiles.length === 0) {
-      profileContainer.innerHTML = "<p>No matches found.</p>";
+      profileContainer.innerHTML = "<p>No profiles found.</p>";
       return;
   }
 
-  // iterate over the profiles array and create HTML for each profile
-  jsonData.profiles.forEach(profile => {
-    createHTMLForSingleProfile(profile)
-  });
+  // only create a card for the first profile in the array
+  createHTMLForSingleProfile(jsonData.profiles[0])
 }
 
 
 function createHTMLForSingleProfile(profile) {
-
-  const defaultProfilePicUrl = `{% static 'path/to/default/profile-pic.jpg' %}`;
   const profileContainer = document.querySelector('#profile-container');
 
   // create card for 'song likes'
@@ -112,7 +113,7 @@ function createLikeButtons(profile) {
 
 function createSongCard(profile) {
   const songCard = document.createElement('div');
-  songCard.classList.add('col-md-4', 'col-sm-6', 'mb-4', 'mt-3');
+  songCard.classList.add('col-md-4', 'col-sm-6', 'mt-2');
   songCard.innerHTML = `
       <div class="card bg-dark border-0 p-3 text-center">
           <p class="text-light mb-1">${profile.username} likes</p>
@@ -127,7 +128,7 @@ function createSongCard(profile) {
 
 function createSongsInCommonCard(profile) {
   const songCard = document.createElement('div');
-  songCard.classList.add('col-md-4', 'col-sm-6', 'mb-4', 'mt-4');
+  songCard.classList.add('col-md-4', 'col-sm-6', 'mb-2');
   songCard.innerHTML = `
       <div class="card bg-secondary bg-gradient border-0 p-3 text-center">
           <p class="text-light mb-1">You and ${profile.username} like</p>
@@ -141,8 +142,9 @@ function createSongsInCommonCard(profile) {
 
 
 function createPictureCard(profile) {
+  const defaultProfilePicUrl = `{% static 'path/to/default/profile-pic.jpg' %}`;
   const pictureCard = document.createElement('div');
-  pictureCard.classList.add('col-md-4', 'col-sm-6', 'mb-4', 'mt-3');
+  pictureCard.classList.add('col-md-4', 'col-sm-6', 'mt-2');
   pictureCard.innerHTML = `
       <div class="card border-0 p-3 text-center">
           ${profile.profile_picture ? 

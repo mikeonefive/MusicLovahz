@@ -5,12 +5,22 @@
 
         {% if user.is_authenticated %}
 
-            <div class="container">
+            <div class="container"> <!-- javascript puts the profiles in here by fetching profile-container -->
                 <div id="profile-container" class="row d-flex justify-content-center align-items-center"></div>
             </div>
 
+        {% else %}
+            <div class="text-center mt-5">
+                Please <a href="{% url 'register' %}">register here!</a>
+            </div>
 
-<!-- pure DJANGO approach -->
+            <div class="text-center">
+                Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+            </div>
+        {% endif %}
+
+
+<!-- old pure DJANGO approach -->
 <!--            <div class="container ">-->
 <!--            {% if matches %}-->
 
@@ -33,32 +43,5 @@
 <!--                <p class="text-center text-muted">No profiles to show</p>-->
 <!--            {% endif %}-->
 <!--            </div>-->
-
-        <!-- Pagination frontend, only 1 profile per page -->
-<!--        <nav aria-label="Page navigation">-->
-<!--          <ul class="pagination d-flex justify-content-center">-->
-<!--              {% if matches.has_previous %}-->
-<!--                <li class="page-item">-->
-<!--                    <a class="page-link text-white bg-danger" href="?page={{ matches.previous_page_number }}">Previous Profile</a>-->
-<!--                </li>-->
-<!--              {% endif %}-->
-
-<!--              {% if matches.has_next %}-->
-<!--                <li class="page-item">-->
-<!--                    <a class="page-link text-white bg-success" href="?page={{ matches.next_page_number }}">Next Profile</a>-->
-<!--                </li>-->
-<!--              {% endif %}-->
-<!--          </ul>-->
-<!--        </nav>-->
-
-        {% else %}
-            <div class="text-center mt-5">
-                Please <a href="{% url 'register' %}">register here!</a>
-            </div>
-
-            <div class="text-center">
-                Already have an account? <a href="{% url 'login' %}">Log In here.</a>
-            </div>
-        {% endif %}
 
 {% endblock %}

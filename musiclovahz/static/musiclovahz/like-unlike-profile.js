@@ -38,18 +38,18 @@ async function updateLikes(event) {
 
     if (response && response.ok) {  
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
 
-        if (data.success) {
-            // check if we're currently on the matches page
-            const currentUrl = window.location.pathname;
-            const reloadUrl = currentUrl.includes('show_matches') ? '/show_matches/' : '/find_matching_profiles/';
+        // check if we're currently on the matches page
+        const currentUrl = window.location.pathname;
+        const reloadUrl = currentUrl.includes('show_matches') ? '/show_matches/' : '/find_matching_profiles/';
 
-            // get profile container and clear it before fetching new profiles
-            const profileContainer = document.querySelector('#profile-container');
-            profileContainer.innerHTML = ''; 
+        // get profile container and clear it before fetching new profiles
+        const profileContainer = document.querySelector('#profile-container');
+        profileContainer.innerHTML = ''; 
 
-            await loadProfiles(reloadUrl);
-        }
+        currentPage++; // increment to the next profile
+
+        await loadProfiles(reloadUrl);
     }
 }

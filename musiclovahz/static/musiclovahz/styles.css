@@ -6,19 +6,45 @@
 }
 
 .logo {
-    max-width: 7vw;
+    width: 7vw;
     height: auto;                  /* maintain aspect ratio */
 }
 
+@media (max-width: 768px) {        /* increase size of logo on small screens */
+  .logo {
+    width: 50vw;
+  }
+}
+
 /* USER PROFILE */
+.profile-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .profile-picture {
-    width: 20vw;
+    width: 16vw;
     height: auto;
     border-radius: 15px;           /* rounded edges for profile pics */
 }
 
 .card {
     border-radius: 0.375rem;       /* match rounded edges for bootstrap cards */
+    max-width: 300px;              /* cards a bit smaller on larger screens */
+    margin: 0 auto;                 /* center the cards */
+}
+
+/* small screen adjustments */
+@media (max-width: 768px) {
+  .card {
+    max-width: 250px;               /* limit card width on smaller screens */
+  }
+
+                                    /* increase profile picture size on small screens */
+  .profile-picture {
+    width: 50vw;
+  }
 }
 
 /* LIKE BUTTON APPEARANCE */
