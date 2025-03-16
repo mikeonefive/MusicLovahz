@@ -2,15 +2,19 @@ document.addEventListener('DOMContentLoaded', main);
 
 
 async function main() {
-    const matchingProfiles = await loadProfiles(`/find_matching_profiles/`);
-    console.log(matchingProfiles); 
-    createHTMLViewForProfiles(matchingProfiles);
+  await loadProfiles(`/find_matching_profiles/`);
+
+  // add event listener for "Show Matches" button
+  document.getElementById('show-matches-btn').addEventListener('click', async (event) => {
+    event.preventDefault();           // prevent default behavior for links (it would return the raw JSON in the browser cause it's a link)
+    await loadProfiles(`/show_matches/`);
+  });
 }
 
 
-async function loadProfiles(profiles) {
+async function loadProfiles(url) {
     try {
-        let response = await fetch(profiles);
+        let response = await fetch(url);
         let jsonData = await response.json();
         console.log(jsonData);
         
@@ -27,6 +31,18 @@ async function loadProfiles(profiles) {
 
 
 function createHTMLViewForProfiles(jsonData) {
+
+  const profileContainer = document.querySelector('#profile-container');
+
+  // IMPORTANT! clear previous profiles before adding new ones
+  profileContainer.innerHTML = ''; 
+
+  // make sure jsonData has profiles
+  if (!jsonData.profiles || jsonData.profiles.length === 0) {
+      profileContainer.innerHTML = "<p>No matches found.</p>";
+      return;
+  }
+
   // iterate over the profiles array and create HTML for each profile
   jsonData.profiles.forEach(profile => {
     createHTMLForSingleProfile(profile)

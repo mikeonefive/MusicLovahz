@@ -20,6 +20,7 @@ def find_users_by_songs(current_user):
         .exclude(id=current_user.id)
         .exclude(id__in=current_user.matches.all())     # exclude already matched users
         .exclude(id__in=current_user.likes.all())       # exclude profiles already liked
+        .exclude(id__in=current_user.unlikes.all())     # exclude unliked profiles
         .annotate(shared_songs=Count("songs", distinct=True))                                                           # adds a new field called shared_songs to each user in the queryset.
                                                                                                                         # count("songs", filter=...) → counts how many songs the user has
                                                                                                                         # filter=models.Q(songs__in=current_user.songs.all()) → Ensures we only count songs that match with current_user

@@ -11,6 +11,11 @@ class User(AbstractUser):
                                    related_name="liked_by",
                                    blank=True)
 
+    unlikes = models.ManyToManyField("self",
+                                   symmetrical=False,
+                                   related_name="unliked_by",
+                                   blank=True)
+
     matches = models.ManyToManyField("self",
                                     blank=True, symmetrical=True)  # `symmetrical=True` ensures bidirectional relationships
 
@@ -39,6 +44,7 @@ class User(AbstractUser):
             "profile_picture": self.profile_picture.url if self.profile_picture else None,
             "songs": [song.serialize() for song in self.songs.all()],
             "likes": [like.id for like in self.likes.all()],
+            "unlikes": [unlike.id for unlike in self.unlikes.all()],
             "matches": [match.id for match in self.matches.all()],
             "songs_in_common": [{"title": song.title, "artist": song.artist} for song in songs_in_common],
         }

@@ -117,7 +117,6 @@ def find_matching_profiles_API(request):
     # })
 
 
-# TODO how to see this in frontend???
 @login_required
 def show_matches(request):
     current_user = request.user
@@ -132,7 +131,7 @@ def show_matches(request):
     profiles_data = [user.serialize(current_user) for user in all_matches]
 
     return JsonResponse({
-        "matches": profiles_data
+        "profiles": profiles_data
     })
 
     # return render(request, "musiclovahz/show_profiles.html", {
@@ -161,6 +160,7 @@ def like_unlike_profile(request, user_id):
     elif request.method == "DELETE":
         # update database
         loggedin_user.likes.remove(profile_to_update)
+        loggedin_user.unlikes.add(profile_to_update)
         loggedin_user.matches.remove(profile_to_update)
         profile_to_update.matches.remove(loggedin_user)
 
