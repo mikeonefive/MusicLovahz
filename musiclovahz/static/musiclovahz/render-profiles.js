@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', main);
 
 
 let currentPage = 1;    // start from the first profile
+let isMatchesPage = false;
 
 
 async function main() {
@@ -12,7 +13,10 @@ async function main() {
   document.getElementById('show-matches-btn').addEventListener('click', async (event) => {
     event.preventDefault();               // prevent default behavior for links (it would return the raw JSON in the browser cause it's a link)
     currentPage = 1;                      // reset to the first page when clicking "Show Matches"
+    isMatchesPage = true;                 // as soon as the button was clicked set the flag to true, we're on the matches page
     await loadProfiles(`/show_matches/`, currentPage);
+
+    // TODO: implement buttons to switch between matches
   });
 }
 
@@ -21,14 +25,13 @@ async function loadProfiles(url, currentPage = 1) {   // = 1 is the default if t
     try {
         let response = await fetch(`${url}?page=${currentPage}`);
         let jsonData = await response.json();
-        console.log(jsonData);
+        // console.log(jsonData);
         
         // show the profile in html, for the first page
         createHTMLViewForProfiles(jsonData);
 
         // add like and unlike button listeners
         addLikeButtonListeners();
-        
       } catch (error) {
         console.log('Error: ', error);
       }
@@ -74,6 +77,11 @@ function createHTMLForSingleProfile(profile) {
   profileContainer.appendChild(songCard);
   profileContainer.appendChild(pictureCard);
   profileContainer.appendChild(songsInCommonCard);
+
+  // fetch and display chat history as soon as the profile is shown
+  if (isMatchesPage) {
+    showChatHistory(profile.id);
+  }
 }
 
 

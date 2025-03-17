@@ -38,7 +38,6 @@ async function updateLikes(event) {
 
     if (response && response.ok) {  
         const data = await response.json();
-        // console.log(data);
 
         // check if we're currently on the matches page
         const currentUrl = window.location.pathname;

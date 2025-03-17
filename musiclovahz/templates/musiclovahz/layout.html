@@ -9,7 +9,6 @@
 
         <script src="{% static 'musiclovahz/render-profiles.js' %}"></script>
         <script src="{% static 'musiclovahz/like-unlike-profile.js' %}"></script>
-        <script src="{% static 'musiclovahz/add-song-form.js' %}"></script>
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
@@ -58,5 +57,8 @@
             {% block body %}
             {% endblock %}
         </div>
+
+    {% block script %}
+    {% endblock %}
     </body>
 </html>

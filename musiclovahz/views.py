@@ -1,14 +1,16 @@
+import json
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.db.models import Q
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 
 from .forms import CustomUserCreationForm, UserProfileForm
-from .models import User, Song
-import json
+from .models import User, Song, Message
 
 from .utils import check_mutual_like_and_update_data, convert_to_smart_title_case, find_users_by_songs
 
@@ -163,3 +165,46 @@ def like_unlike_profile(request, user_id):
         return JsonResponse({"unliked": f"{profile_to_update} {user_id}"})
 
     return JsonResponse({"error": "Invalid request method"}, status=405)
+
+
+@csrf_exempt
+@login_required
+def get_messages(request, chatpartner_id):
+    current_user = request.user
+    chat_partner = get_object_or_404(User, id=chatpartner_id)
+
+    messages = Message.objects.filter(
+        Q(sender=current_user, recipient=chat_partner) |
+        Q(sender=chat_partner, recipient=current_user)
+    ).order_by("-timestamp")
+
+    # messages_data = [message.serialize() for message in messages]
+    messages_data = []
+    for message in messages:
+        messages_data.append(message.serialize())
+
+    return JsonResponse({"messages": messages_data})
+
+
+@csrf_exempt
+@login_required
+def send_message(request, chat_partner):
+    current_user = request.user
+    # Composing a new message must be via POST
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+
+    data = json.loads(request.body)
+    # Get contents of email or default to empty
+    content = data.get("content", "").strip()
+    if not content:
+        return JsonResponse({"error": "Message content cannot be empty."}, status=400)
+
+    return JsonResponse({"user": f"{current_user.serialize()}"})
+
+
+
+
+
+
+

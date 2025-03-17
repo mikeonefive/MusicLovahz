@@ -5,9 +5,16 @@
 
         {% if user.is_authenticated %}
 
-            <div class="container"> <!-- javascript puts the profiles in here by fetching profile-container -->
+            <!-- javascript puts the profiles in here by fetching profile-container -->
+            <div class="container">
                 <div id="profile-container" class="row d-flex justify-content-center align-items-center"></div>
             </div>
+
+            <!-- javascript fetches chat history view and send message and puts the contents here -->
+            <div id="chat-history-view"></div>
+
+            <div id="send-message-view"></div>
+
 
         {% else %}
             <div class="text-center mt-5">
@@ -19,6 +26,12 @@
             </div>
         {% endif %}
 
+{% endblock %}
+
+
+{% block script %}
+    <script src="{% static 'musiclovahz/show-chat-and-messages.js' %}"></script>
+{% endblock %}
 
 <!-- old pure DJANGO approach -->
 <!--            <div class="container ">-->
@@ -44,4 +57,3 @@
 <!--            {% endif %}-->
 <!--            </div>-->
 
-{% endblock %}

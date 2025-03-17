@@ -30,8 +30,8 @@ class User(AbstractUser):
     #     super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"username: {self.username}"
-                # f"songs: {[song.serialize() for song in self.songs.all()]}")
+        return (f"username: {self.username},"
+                f"id: {self.id}")
 
     def serialize(self, matched_user):
         from .utils import find_songs_in_common                         # import inside method to avoid circular imports
@@ -62,4 +62,21 @@ class Song(models.Model):
         return {
             "title": self.title,
             "artist": self.artist
+        }
+
+
+class Message(models.Model):
+    sender = models.ForeignKey("User", on_delete=models.SET_NULL, related_name="messages_sent", null=True)
+    recipient = models.ForeignKey("User", on_delete=models.SET_NULL,  related_name="messages_received", null=True)
+    content = models.CharField(max_length=100)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+
+    def serialize(self):
+        return {
+            "sender": self.sender.username,
+            "recipient" : self.recipient.username,
+            "content": self.content,
+            "datetime": self.timestamp.strftime('%B %d, %Y %I:%M %p'),
+            "read": self.read
         }

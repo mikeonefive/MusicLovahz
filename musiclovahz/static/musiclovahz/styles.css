@@ -72,3 +72,42 @@
 .like-icon:hover {
     transform: scale(1.4);          /* grows without affecting layout */
 }
+
+/* CHAT WINDOW FOR MATCHES */
+.custom-chat-card {
+    width: 90%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: 2vw;
+    /* border: 0; */
+}
+
+.message-date {
+    float: right;
+    font-size: 0.7em;
+    color: gray;
+}
+
+
+/* SONG INPUT FORM styles */
+#song-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;                  /* space between each input field */
+}
+
+.song-input {
+    flex: 1 1 40%;
+    max-width: 300px;
+}
+
+.song-input {
+    flex: 1 1 20%;              /* allow each input to grow, shrink, and take up 20% of the width */
+    min-width: 200px;
+}
+
+@media (max-width: 767px) {
+    .song-input {
+        flex: 1 1 70%;          /* on smaller screens, make each input take up 70% width */
+    }
+}

@@ -1,4 +1,5 @@
 {% extends "musiclovahz/layout.html" %}
+{% load static %}
 
 {% block title %}
     Edit Profile
@@ -26,17 +27,21 @@
          <div class="pl-4 mt-5">
             <h5>Add Songs</h5>
 
-            <div id="song-input-container">
+            <div id="song-input-container" class="form-row">
                 <div class="form-group w-25 song-input">
                     <input class="form-control mb-1" type="text" name="title" placeholder="Song title">
                     <input class="form-control" type="text" name="artist" placeholder="Artist">
                 </div>
+
+                <!-- New song fields will be added here dynamically -->
+
             </div>
+
 
                 <button type="button" class="btn btn-primary" id="add-song-btn">Add another song</button>
             </div>
 
-        <div class="d-flex justify-content-center mt-3">
+        <div class="d-flex justify-content-center mt-3 mb-5">
             <button class="btn btn-secondary" type="submit">Save Changes</button>
         </div>
     </form>
@@ -44,3 +49,7 @@
     </div>
 
 {% endblock %}
+
+{% block script%}
+    <script src="{% static 'musiclovahz/add-song-form.js' %}"></script>
+{% endblock%}
