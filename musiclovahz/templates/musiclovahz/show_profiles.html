@@ -6,9 +6,7 @@
         {% if user.is_authenticated %}
 
             <!-- javascript puts the profiles in here by fetching profile-container -->
-            <div class="container">
-                <div id="profile-container" class="row d-flex justify-content-center align-items-center"></div>
-            </div>
+            <div id="profile-container" class="row d-flex justify-content-center align-items-center"></div>
 
             <!-- javascript fetches chat history view and send message and puts the contents here -->
             <div id="chat-history-view"></div>
@@ -30,30 +28,6 @@
 
 
 {% block script %}
+    <script src="{% static 'musiclovahz/csrf-handler.js' %}"></script>
     <script src="{% static 'musiclovahz/show-chat-and-messages.js' %}"></script>
 {% endblock %}
-
-<!-- old pure DJANGO approach -->
-<!--            <div class="container ">-->
-<!--            {% if matches %}-->
-
-<!--                <div class="row d-flex justify-content-center align-items-center"> &lt;!&ndash; center the rows of cards &ndash;&gt;-->
-<!--                    {% for user in matches %}-->
-
-<!--                        &lt;!&ndash; likes songs card&ndash;&gt;-->
-<!--                        {% include "musiclovahz/song_likes.html" %}-->
-
-<!--                        &lt;!&ndash; profile card with like/unlike button &ndash;&gt;-->
-<!--                        {% include "musiclovahz/picture_and_buttons.html"%}-->
-
-<!--                        &lt;!&ndash; songs in common card &ndash;&gt;-->
-<!--                        {% include "musiclovahz/songs_in_common.html" %}-->
-
-<!--                    {% endfor %}-->
-<!--                </div>-->
-
-<!--            {% else %}-->
-<!--                <p class="text-center text-muted">No profiles to show</p>-->
-<!--            {% endif %}-->
-<!--            </div>-->
-

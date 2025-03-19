@@ -15,7 +15,9 @@ urlpatterns = [
     path("show_matches/", views.show_matches, name="show_matches"),
     path("check_mutual_likes/", utils.get_users_who_like_each_other, name="check_mutual_likes"),
     path("likes/<int:user_id>/", views.like_unlike_profile, name="like_unlike_profile"),
-    path("messages/<int:chatpartner_id>", views.get_messages, name="get_messages")
+
+    path("messages/<int:chatpartner_id>", views.get_messages, name="get_messages"),
+    path("messages/send/<int:chatpartner_id>", views.send_message, name="send_message")
 ]
 
 if settings.DEBUG:

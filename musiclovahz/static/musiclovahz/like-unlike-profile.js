@@ -24,20 +24,31 @@ async function updateLikes(event) {
     const profileId = button.getAttribute('data-profile-id');
     let response;
 
+    let csrfToken = getCSRFToken();
+
     // check if the button has the class like-button or unlike-button
     if (button.classList.contains('like-button')) {
         // update this profile's like (fetch call to the backend)
         response = await fetch(`/likes/${profileId}/`, {
-            method: 'POST'    
+            method: 'POST',
+            headers: {                                
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken  // include CSRF token
+                }    
         });
     } else if (button.classList.contains('unlike-button')) {
         response = await fetch(`/likes/${profileId}/`, {
-            method: 'DELETE'    
+            method: 'DELETE',
+            headers: {                                
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken  // include CSRF token
+                }   
         });
     }
 
     if (response && response.ok) {  
         const data = await response.json();
+
 
         // check if we're currently on the matches page
         const currentUrl = window.location.pathname;

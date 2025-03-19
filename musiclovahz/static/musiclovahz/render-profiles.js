@@ -16,7 +16,8 @@ async function main() {
     isMatchesPage = true;                 // as soon as the button was clicked set the flag to true, we're on the matches page
     await loadProfiles(`/show_matches/`, currentPage);
 
-    // TODO: implement buttons to switch between matches
+
+  // TODO: implement buttons to switch between matches
   });
 }
 
@@ -81,6 +82,7 @@ function createHTMLForSingleProfile(profile) {
   // fetch and display chat history as soon as the profile is shown
   if (isMatchesPage) {
     showChatHistory(profile.id);
+    showComposeMessage(profile.id);
   }
 }
 

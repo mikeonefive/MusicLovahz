@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils.timezone import localtime
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 
@@ -138,7 +139,6 @@ def show_matches(request):
     })
 
 
-@csrf_exempt
 @login_required
 def like_unlike_profile(request, user_id):
     loggedin_user = request.user
@@ -149,11 +149,12 @@ def like_unlike_profile(request, user_id):
     if request.method == "POST":
         # check if user already likes profile -> do nothing
         if loggedin_user.likes.filter(id=user_id).exists():
-            return JsonResponse({"user_id": user_id, "liked" : f"already liked {user_id}"}, status=400)
+            return JsonResponse({}, status=400)
 
         # update database
         loggedin_user.likes.add(profile_to_update)
-        return JsonResponse({"user_id": user_id, "liked": f"{profile_to_update}"})
+        # return JsonResponse({"user_id": user_id, "liked": f"{profile_to_update}"}, status=201)
+        return JsonResponse({}, status=204)
 
     elif request.method == "DELETE":
         # update database
@@ -162,12 +163,13 @@ def like_unlike_profile(request, user_id):
         loggedin_user.matches.remove(profile_to_update)
         profile_to_update.matches.remove(loggedin_user)
 
-        return JsonResponse({"unliked": f"{profile_to_update} {user_id}"})
+        # return JsonResponse({"unliked": f"{profile_to_update} {user_id}"}, status=200)
+        return JsonResponse({}, status=204)     # 204 = no content
 
-    return JsonResponse({"error": "Invalid request method"}, status=405)
+    return JsonResponse({"error": "Invalid request method"},
+                        status=405)
 
 
-@csrf_exempt
 @login_required
 def get_messages(request, chatpartner_id):
     current_user = request.user
@@ -176,35 +178,39 @@ def get_messages(request, chatpartner_id):
     messages = Message.objects.filter(
         Q(sender=current_user, recipient=chat_partner) |
         Q(sender=chat_partner, recipient=current_user)
-    ).order_by("-timestamp")
+    ).order_by("timestamp")
 
     # messages_data = [message.serialize() for message in messages]
     messages_data = []
     for message in messages:
         messages_data.append(message.serialize())
 
-    return JsonResponse({"messages": messages_data})
+    return JsonResponse({"messages": messages_data},
+                        status=200)
 
 
-@csrf_exempt
+
 @login_required
-def send_message(request, chat_partner):
-    current_user = request.user
-    # Composing a new message must be via POST
+def send_message(request, chatpartner_id):
+    sender = request.user
+    recipient = get_object_or_404(User, id=chatpartner_id)
+
+    # composing a new message must be via POST
     if request.method != "POST":
         return JsonResponse({"error": "POST request required."}, status=400)
 
     data = json.loads(request.body)
-    # Get contents of email or default to empty
+    # get contents of email or default to empty
     content = data.get("content", "").strip()
-    if not content:
-        return JsonResponse({"error": "Message content cannot be empty."}, status=400)
+    if not content or not sender or not recipient:
+        return JsonResponse({"error": "Message cannot be empty and/or needs a sender and recipient."},
+                            status=400)
 
-    return JsonResponse({"user": f"{current_user.serialize()}"})
+    # create a new message and save it in database
+    message = Message.objects.create(sender=sender,
+                      recipient=recipient,
+                      content=content)
+    message.save()
 
-
-
-
-
-
-
+    return JsonResponse(message.serialize(),
+                        status=201)
