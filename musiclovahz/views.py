@@ -6,8 +6,6 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.utils.timezone import localtime
-from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 
 from .forms import CustomUserCreationForm, UserProfileForm
@@ -57,7 +55,7 @@ def register(request):
 
 def index(request):
     if request.user.is_authenticated:
-        return find_matching_profiles(request)
+        return render(request, "musiclovahz/show_profiles.html")
     else:
         return render(request, "musiclovahz/login.html")
 
@@ -101,19 +99,15 @@ def edit_profile(request):
 
 
 @login_required
-def find_matching_profiles(request):
-    return render(request, "musiclovahz/show_profiles.html")
-
-
-@login_required
 def find_matching_profiles_API(request):
     current_user = request.user
     # find users who have songs in common with current_user
     song_mates = find_users_by_songs(current_user)
     # print(f"Found {len(song_mates)} song mates")
     # if 2 users have songs in common, check if they like each other and if so update database
-    if song_mates:
-        check_mutual_like_and_update_data(current_user)
+
+    # if song_mates:
+    #     check_mutual_like_and_update_data(current_user)
 
     # convert data for JSON response
     profiles_data = [user.serialize(current_user) for user in song_mates]
@@ -153,8 +147,12 @@ def like_unlike_profile(request, user_id):
 
         # update database
         loggedin_user.likes.add(profile_to_update)
-        # return JsonResponse({"user_id": user_id, "liked": f"{profile_to_update}"}, status=201)
-        return JsonResponse({}, status=204)
+
+        # check if like is mutual and update data if necessary
+        check_mutual_like_and_update_data(loggedin_user)
+
+        return JsonResponse({"user_id": user_id, "liked": f"{profile_to_update}"}, status=201)
+        # return JsonResponse({}, status=201)           # 201 = new resource created by server
 
     elif request.method == "DELETE":
         # update database
@@ -163,8 +161,8 @@ def like_unlike_profile(request, user_id):
         loggedin_user.matches.remove(profile_to_update)
         profile_to_update.matches.remove(loggedin_user)
 
-        # return JsonResponse({"unliked": f"{profile_to_update} {user_id}"}, status=200)
-        return JsonResponse({}, status=204)     # 204 = no content
+        return JsonResponse({"unliked": f"{profile_to_update} {user_id}"}, status=200)
+        # return JsonResponse({}, status=200)     # empty JSON response ok
 
     return JsonResponse({"error": "Invalid request method"},
                         status=405)
@@ -187,7 +185,6 @@ def get_messages(request, chatpartner_id):
 
     return JsonResponse({"messages": messages_data},
                         status=200)
-
 
 
 @login_required

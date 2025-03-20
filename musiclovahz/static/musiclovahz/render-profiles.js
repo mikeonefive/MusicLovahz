@@ -14,8 +14,7 @@ async function main() {
     event.preventDefault();               // prevent default behavior for links (it would return the raw JSON in the browser cause it's a link)
     currentPage = 1;                      // reset to the first page when clicking "Show Matches"
     isMatchesPage = true;                 // as soon as the button was clicked set the flag to true, we're on the matches page
-    await loadProfiles(`/show_matches/`, currentPage);
-
+    let profiles = await loadProfiles(`/show_matches/`, currentPage);
 
   // TODO: implement buttons to switch between matches
   });

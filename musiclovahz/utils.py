@@ -44,12 +44,13 @@ def find_songs_in_common(current_user, matched_user):
 
 def update_matches(current_user, mutual_likes):
     current_user.matches.add(*mutual_likes)  # unpack queryset and add matches to the profile
-    current_user.save()
 
     # add current_user to all matching users' matches
     for user in mutual_likes:
         user.matches.add(current_user)
-        user.save()  # save each user after adding current_user to their matches
+
+
+    current_user.save()
 
     # print(f"{current_user.matches} matches with {matching_users}")
 

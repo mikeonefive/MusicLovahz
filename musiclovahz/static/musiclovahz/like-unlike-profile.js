@@ -49,17 +49,20 @@ async function updateLikes(event) {
     if (response && response.ok) {  
         const data = await response.json();
 
-
         // check if we're currently on the matches page
         const currentUrl = window.location.pathname;
         const reloadUrl = currentUrl.includes('show_matches') ? '/show_matches/' : '/find_matching_profiles/';
 
-        // get profile container and clear it before fetching new profiles
-        const profileContainer = document.querySelector('#profile-container');
-        profileContainer.innerHTML = ''; 
-
         currentPage++; // increment to the next profile
 
-        await loadProfiles(reloadUrl);
+        // load the next profile after a successful like/unlike action
+        // TODO: unliking a match doesn't jump to the next match page for some reason
+        const profileContainer = document.querySelector('#profile-container');
+        profileContainer.innerHTML = '';  // clear the existing profile
+
+        // Fetch the next profile based on the updated currentPage
+        await loadProfiles(reloadUrl, currentPage);
+
+        console.log('Current page:', currentPage);
     }
 }
