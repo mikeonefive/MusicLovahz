@@ -41,28 +41,36 @@ async function updateLikes(event) {
             method: 'DELETE',
             headers: {                                
                 "Content-Type": "application/json",
-                "X-CSRFToken": csrfToken  // include CSRF token
+                "X-CSRFToken": csrfToken  
                 }   
         });
+
+        // clear chat history when unliking
+        document.querySelector('#chat-history-view').innerHTML = "";
+        document.querySelector('#send-message-view').innerHTML = "";
     }
 
     if (response && response.ok) {  
         const data = await response.json();
-
+        console.log(data);
+        
         // check if we're currently on the matches page
-        const currentUrl = window.location.pathname;
-        const reloadUrl = currentUrl.includes('show_matches') ? '/show_matches/' : '/find_matching_profiles/';
+        let reloadUrl;
 
-        currentPage++; // increment to the next profile
+        // reset currentPage to 1 if we're on the matches page
+        if (isMatchesPage) {
+            currentPage = 1;
+            reloadUrl = '/show_matches/';  // use matches API
+        } else {
+            currentPage++;
+            reloadUrl = '/find_matching_profiles/'; // use profile search
+        }
 
         // load the next profile after a successful like/unlike action
-        // TODO: unliking a match doesn't jump to the next match page for some reason
         const profileContainer = document.querySelector('#profile-container');
         profileContainer.innerHTML = '';  // clear the existing profile
 
         // Fetch the next profile based on the updated currentPage
         await loadProfiles(reloadUrl, currentPage);
-
-        console.log('Current page:', currentPage);
     }
 }

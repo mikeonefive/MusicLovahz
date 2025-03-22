@@ -129,7 +129,8 @@ def show_matches(request):
     profiles_data = [user.serialize(current_user) for user in all_matches]
 
     return JsonResponse({
-        "profiles": profiles_data
+        "profiles": profiles_data,
+        "has_more": len(profiles_data) > 0,
     })
 
 
@@ -151,7 +152,7 @@ def like_unlike_profile(request, user_id):
         # check if like is mutual and update data if necessary
         check_mutual_like_and_update_data(loggedin_user)
 
-        return JsonResponse({"user_id": user_id, "liked": f"{profile_to_update}"}, status=201)
+        return JsonResponse({"message": f"You liked {profile_to_update.username}"}, status=201)
         # return JsonResponse({}, status=201)           # 201 = new resource created by server
 
     elif request.method == "DELETE":
@@ -161,7 +162,7 @@ def like_unlike_profile(request, user_id):
         loggedin_user.matches.remove(profile_to_update)
         profile_to_update.matches.remove(loggedin_user)
 
-        return JsonResponse({"unliked": f"{profile_to_update} {user_id}"}, status=200)
+        return JsonResponse({"message": f"You unliked {profile_to_update.username}"}, status=200)
         # return JsonResponse({}, status=200)     # empty JSON response ok
 
     return JsonResponse({"error": "Invalid request method"},

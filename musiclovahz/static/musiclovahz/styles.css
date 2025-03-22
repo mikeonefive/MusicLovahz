@@ -73,6 +73,25 @@
     transform: scale(1.4);          /* grows without affecting layout */
 }
 
+
+/* PAGINATION CONTROLS MATCHES PAGE */
+.page-link {
+    color: gray;
+    font-weight: bold;
+    border: none;
+}
+
+.page-link:hover {
+    background-color: #f8f9fa;
+    color: black;
+    border: none;
+}
+
+.page-link:focus {
+    box-shadow: none; /* Remove the box-shadow that might appear in some browsers */
+    border: none; /* Ensure there's no border */
+}
+
 /* CHAT WINDOW FOR MATCHES */
 .custom-chat-card {
     width: 90%;

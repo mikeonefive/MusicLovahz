@@ -6,6 +6,7 @@ let isMatchesPage = false;
 
 
 async function main() {
+
   // load potential matching profiles on index
   await loadProfiles(`/find_matching_profiles/`, currentPage);
 
@@ -15,44 +16,47 @@ async function main() {
     currentPage = 1;                      // reset to the first page when clicking "Show Matches"
     isMatchesPage = true;                 // as soon as the button was clicked set the flag to true, we're on the matches page
     let profiles = await loadProfiles(`/show_matches/`, currentPage);
-
-  // TODO: implement buttons to switch between matches
   });
 }
 
 
 async function loadProfiles(url, currentPage = 1) {   // = 1 is the default if this parameter is not passed in
     try {
-        let response = await fetch(`${url}?page=${currentPage}`);
-        let jsonData = await response.json();
-        // console.log(jsonData);
-        
-        // show the profile in html, for the first page
-        createHTMLViewForProfiles(jsonData);
+      let response = await fetch(`${url}?page=${currentPage}`);
 
-        // add like and unlike button listeners
-        addLikeButtonListeners();
-      } catch (error) {
-        console.log('Error: ', error);
+      if (!response.ok) {
+        throw new Error('Failed to fetch profiles');
       }
-}
 
+      let jsonData = await response.json();
+      const profileContainer = document.querySelector('#profile-container');
+    
+      // make sure jsonData has profiles
+      if (!jsonData.profiles || jsonData.profiles.length === 0) {
+          profileContainer.innerHTML = "<p>No profiles found.</p>";
+          return;
+      }
 
-function createHTMLViewForProfiles(jsonData) {
+      // IMPORTANT! clear previous profiles before adding new ones
+      profileContainer.innerHTML = ''; 
 
-  const profileContainer = document.querySelector('#profile-container');
+      // only create a card for the first profile in the array
+      createHTMLForSingleProfile(jsonData.profiles[0])
 
-  // IMPORTANT! clear previous profiles before adding new ones
-  profileContainer.innerHTML = ''; 
+      // add like and unlike button listeners
+      addLikeButtonListeners();
 
-  // make sure jsonData has profiles
-  if (!jsonData.profiles || jsonData.profiles.length === 0) {
-      profileContainer.innerHTML = "<p>No profiles found.</p>";
-      return;
-  }
+      if (isMatchesPage) {
+        // previous and next buttons
+        createPaginationControls(jsonData, currentPage); 
+      } 
+      
+      return jsonData;
 
-  // only create a card for the first profile in the array
-  createHTMLForSingleProfile(jsonData.profiles[0])
+    } catch (error) {
+      console.log('Error: ', error);
+      return null;
+    }
 }
 
 
