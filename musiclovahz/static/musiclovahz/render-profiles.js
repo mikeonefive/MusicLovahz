@@ -1,35 +1,44 @@
 document.addEventListener('DOMContentLoaded', main);
 
-
-let currentPage = 1;    // start from the first profile
+let profiles = [];
+let currentProfileIndex = 0;    // start from the first profile
 let isMatchesPage = false;
 
 
 async function main() {
 
   // load potential matching profiles on index
-  await loadProfiles(`/find_matching_profiles/`, currentPage);
+  await loadProfiles(`/find_matching_profiles/`);
 
   // add event listener for "Show Matches" button
   document.getElementById('show-matches-btn').addEventListener('click', async (event) => {
     event.preventDefault();               // prevent default behavior for links (it would return the raw JSON in the browser cause it's a link)
-    currentPage = 1;                      // reset to the first page when clicking "Show Matches"
+    currentProfileIndex = 0;              // reset to the first page when clicking "Show Matches"
     isMatchesPage = true;                 // as soon as the button was clicked set the flag to true, we're on the matches page
-    let profiles = await loadProfiles(`/show_matches/`, currentPage);
+    let jsonData = await loadProfiles(`/show_matches/`);
+    profiles = jsonData.profiles || []; 
+
+    if (profiles.length > 0) {
+      displayProfile(currentProfileIndex);
+    } else {
+      document.querySelector('#profile-container').innerHTML = "<p>No matches found.</p>";
+    }
   });
 }
 
 
-async function loadProfiles(url, currentPage = 1) {   // = 1 is the default if this parameter is not passed in
+async function loadProfiles(url) { 
     try {
-      let response = await fetch(`${url}?page=${currentPage}`);
+      // console.log(`Fetching profiles from: ${url}`); 
+      let response = await fetch(url);
 
       if (!response.ok) {
         throw new Error('Failed to fetch profiles');
       }
 
       let jsonData = await response.json();
-      const profileContainer = document.querySelector('#profile-container');
+      // console.log("Received data:", jsonData); 
+      let profileContainer = document.querySelector('#profile-container');
     
       // make sure jsonData has profiles
       if (!jsonData.profiles || jsonData.profiles.length === 0) {
@@ -37,26 +46,44 @@ async function loadProfiles(url, currentPage = 1) {   // = 1 is the default if t
           return;
       }
 
-      // IMPORTANT! clear previous profiles before adding new ones
-      profileContainer.innerHTML = ''; 
-
-      // only create a card for the first profile in the array
-      createHTMLForSingleProfile(jsonData.profiles[0])
-
-      // add like and unlike button listeners
-      addLikeButtonListeners();
+      profiles = jsonData.profiles;
+      currentProfileIndex = 0;
+      displayProfile(currentProfileIndex);
+      console.log(profiles);
 
       if (isMatchesPage) {
         // previous and next buttons
-        createPaginationControls(jsonData, currentPage); 
+        createPaginationControls(); 
       } 
-      
+
       return jsonData;
 
     } catch (error) {
       console.log('Error: ', error);
-      return null;
     }
+}
+
+
+function displayProfile(index) {
+  const profileContainer = document.querySelector('#profile-container');
+
+  // prevent invalid indexes
+  if (index < 0 || index >= profiles.length) {
+    profileContainer.innerHTML = "<p>No profiles found.</p>";
+    return;
+  }; 
+
+  profileContainer.innerHTML = ''; 
+
+  createHTMLForSingleProfile(profiles[index]);
+
+  addLikeButtonListeners();
+
+  // fetch and display chat history as soon as the profile is shown
+  if (isMatchesPage) {
+    showChatHistory(profiles[index].id);
+    showComposeMessage(profiles[index].id);
+  }
 }
 
 
@@ -81,12 +108,6 @@ function createHTMLForSingleProfile(profile) {
   profileContainer.appendChild(songCard);
   profileContainer.appendChild(pictureCard);
   profileContainer.appendChild(songsInCommonCard);
-
-  // fetch and display chat history as soon as the profile is shown
-  if (isMatchesPage) {
-    showChatHistory(profile.id);
-    showComposeMessage(profile.id);
-  }
 }
 
 

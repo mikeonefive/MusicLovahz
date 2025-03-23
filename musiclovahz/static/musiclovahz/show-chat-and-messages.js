@@ -1,14 +1,27 @@
 
 async function showChatHistory(chatPartnerID) {
     const chatHistoryContainer = document.querySelector('#chat-history-view');
+
+    // check if the chat history for this profile is already loaded
+    if (chatHistoryContainer.dataset.currentChatPartnerID === String(chatPartnerID)) {
+        return; // skip fetching if we are already displaying the correct chat history
+    }
+
+    // clear the chat history and update the dataset to the new chat partner
     chatHistoryContainer.innerHTML = "";
+    chatHistoryContainer.dataset.currentChatPartnerID = chatPartnerID;
     
     // fetch call to get all the messages that were sent and received for the profile chatPartner
-    let response = await fetch(`/messages/${chatPartnerID}`);
-    const data = await response.json();
+    try {
+        let response = await fetch(`/messages/${chatPartnerID}`);
+        const data = await response.json();
 
-    const chatCard = createChatCardView(data);
-    chatHistoryContainer.appendChild(chatCard);
+        // Append the chat messages
+        const chatCard = createChatCardView(data);
+        chatHistoryContainer.appendChild(chatCard);
+    } catch (error) {
+        console.error("Error fetching chat history:", error);
+    }
 }
 
 

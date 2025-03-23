@@ -28,6 +28,9 @@ async function updateLikes(event) {
 
     // check if the button has the class like-button or unlike-button
     if (button.classList.contains('like-button')) {
+
+        console.log(`Like button clicked for ${profileId}`);
+
         // update this profile's like (fetch call to the backend)
         response = await fetch(`/likes/${profileId}/`, {
             method: 'POST',
@@ -53,24 +56,15 @@ async function updateLikes(event) {
     if (response && response.ok) {  
         const data = await response.json();
         console.log(data);
-        
-        // check if we're currently on the matches page
-        let reloadUrl;
 
-        // reset currentPage to 1 if we're on the matches page
+        // reset currentIndex to 0 if we're on the matches page
         if (isMatchesPage) {
-            currentPage = 1;
-            reloadUrl = '/show_matches/';  // use matches API
+            currentProfileIndex = 0;
         } else {
-            currentPage++;
-            reloadUrl = '/find_matching_profiles/'; // use profile search
+            currentProfileIndex++;
         }
 
         // load the next profile after a successful like/unlike action
-        const profileContainer = document.querySelector('#profile-container');
-        profileContainer.innerHTML = '';  // clear the existing profile
-
-        // Fetch the next profile based on the updated currentPage
-        await loadProfiles(reloadUrl, currentPage);
+        displayProfile(currentProfileIndex);
     }
 }
