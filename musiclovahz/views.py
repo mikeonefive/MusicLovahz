@@ -103,18 +103,12 @@ def find_matching_profiles_API(request):
     current_user = request.user
     # find users who have songs in common with current_user
     song_mates = find_users_by_songs(current_user)
-    # print(f"Found {len(song_mates)} song mates")
-    # if 2 users have songs in common, check if they like each other and if so update database
-
-    # if song_mates:
-    #     check_mutual_like_and_update_data(current_user)
 
     # convert data for JSON response
     profiles_data = [user.serialize(current_user) for user in song_mates]
 
     return JsonResponse({
-        "profiles": profiles_data,
-        "has_more": len(song_mates) > 0,
+        "profiles": profiles_data
     })
 
 
@@ -123,14 +117,11 @@ def show_matches(request):
     current_user = request.user
     all_matches = current_user.matches.all()
 
-    # print(current_user.matches.all())
-
     # convert data for JSON response
     profiles_data = [user.serialize(current_user) for user in all_matches]
 
     return JsonResponse({
-        "profiles": profiles_data,
-        "has_more": len(profiles_data) > 0,
+        "profiles": profiles_data
     })
 
 

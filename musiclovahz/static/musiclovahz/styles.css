@@ -1,4 +1,10 @@
 /* LAYOUT PAGE */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;             /* prevents vertical scrolling */
+}
+
 .logo-container {
     display: flex;
     justify-content: flex-start;
@@ -7,14 +13,15 @@
 
 .logo {
     width: 7vw;
-    height: auto;                  /* maintain aspect ratio */
+    height: auto;                   /* maintain aspect ratio */
 }
 
-@media (max-width: 768px) {        /* increase size of logo on small screens */
+@media (max-width: 768px) {         /* increase size of logo on small screens */
   .logo {
-    width: 50vw;
+    width: 40vw;
   }
 }
+
 
 /* USER PROFILE */
 .profile-container {
@@ -47,6 +54,7 @@
   }
 }
 
+
 /* LIKE BUTTON APPEARANCE */
 .like-container {
     display: inline-flex;           /* ensures button and count are aligned horizontally */
@@ -76,13 +84,16 @@
 
 /* PAGINATION CONTROLS MATCHES PAGE */
 .page-link {
-    color: gray;
     font-weight: bold;
     border: none;
 }
 
+.page-item {
+    color: gray;
+}
+
 .page-link:hover {
-    background-color: #f8f9fa;
+    background-color: light-gray;
     color: black;
     border: none;
 }
@@ -95,7 +106,7 @@
 /* CHAT WINDOW FOR MATCHES */
 .custom-chat-card {
     width: 90%;
-    max-width: 600px;
+    max-width: 550px;
     margin-left: auto;
     margin-right: 2vw;
     /* border: 0; */
@@ -109,7 +120,7 @@
 
 .compose-form {
     width: 90%;
-    max-width: 600px;
+    max-width: 550px;
     margin-top: 0.3vw;
     margin-left: auto;
     margin-right: 2vw;
@@ -130,12 +141,8 @@
 
 .song-input {
     flex: 1 1 40%;
-    max-width: 300px;
-}
-
-.song-input {
-    flex: 1 1 20%;              /* allow each input to grow, shrink, and take up 20% of the width */
     min-width: 200px;
+    max-width: 300px;
 }
 
 @media (max-width: 767px) {

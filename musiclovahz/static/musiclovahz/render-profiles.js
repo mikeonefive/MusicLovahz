@@ -16,7 +16,7 @@ async function main() {
     currentProfileIndex = 0;              // reset to the first page when clicking "Show Matches"
     isMatchesPage = true;                 // as soon as the button was clicked set the flag to true, we're on the matches page
     let jsonData = await loadProfiles(`/show_matches/`);
-    profiles = jsonData.profiles || []; 
+    profiles = jsonData.profiles; 
 
     if (profiles.length > 0) {
       displayProfile(currentProfileIndex);
