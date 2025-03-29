@@ -2,7 +2,7 @@ MusicLovahz - A Music-Based Matchmaking Platform
 
 Overview
 
-MusicLovahz is a web application that connects users based on their shared taste in music. Users can build a profile by adding their favorite songs, and the platform suggests potential matches based on these selections. Unlike traditional social networks, MusicLovahz leverages users' song preferences to facilitate meaningful connections, making it a unique and engaging experience for music lovers.
+MusicLovahz is a web application that connects users based on their shared taste in music. Users can build a profile by adding their favorite songs, and the platform suggests potential matches based on these selections. Unlike traditional social networks, MusicLovahz leverages users' song preferences to facilitate meaningful connections, making it a unique and engaging experience for music aficionados.
 
 Distinctiveness and Complexity
 
