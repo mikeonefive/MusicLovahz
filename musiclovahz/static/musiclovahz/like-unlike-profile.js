@@ -69,9 +69,33 @@ async function updateLikes(event) {
         const data = await response.json();
         //console.log(data);
         
-        currentProfileIndex++;
-        
+        // display message from backend JSON response
+        showAlert(data.message);
+
         // load the next profile after a successful like/unlike action
+        currentProfileIndex++;
         displayProfile(currentProfileIndex);
     }
+}
+
+
+function showAlert(message) {
+    let type;
+
+    if (message.includes("unliked"))
+        type = "danger";  
+    else
+        type = "success";
+
+    const alertBox = document.getElementById("custom-alert");
+    const alertMessage = document.getElementById("alert-message");
+        
+    alertBox.className = `alert alert-${type}`;
+    alertMessage.textContent = message;  
+    alertBox.classList.add("show");
+
+    // hide alert after 3 seconds
+    setTimeout(() => {
+        alertBox.classList.add("d-none");
+    }, 3000);
 }
