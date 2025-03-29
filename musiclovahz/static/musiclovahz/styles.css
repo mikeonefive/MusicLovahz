@@ -117,16 +117,18 @@ html, body {
     /* border: 0; */
 }
 
-.message-date, message-read {
+.message-date {
     float: right;
     font-size: 0.7em;
     color: gray;
+    margin-top: 0.5vw;
 }
 
 .message-read {
-    float: right;
+    float: left;
     font-size: 0.7em;
     color: green;
+    margin-top: -0.3vw;
 }
 
 .compose-form {
