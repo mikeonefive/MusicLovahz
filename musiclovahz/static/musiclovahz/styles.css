@@ -22,6 +22,11 @@ html, body {
   }
 }
 
+/* FORM FIELDS FOCUS */
+.form-control:focus {
+    border-color: #d3d3d3 !important;
+    box-shadow: 0 0 5px gray !important;
+}
 
 /* USER PROFILE */
 .profile-container {
