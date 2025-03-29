@@ -51,18 +51,26 @@ async function updateLikes(event) {
         // clear chat history when unliking
         document.querySelector('#chat-history-view').innerHTML = "";
         document.querySelector('#send-message-view').innerHTML = "";
+
+        // remove the unliked profile from the matches list if we're on the matches page
+        if (isMatchesPage) {
+            profiles = profiles.filter(profile => profile.id !== parseInt(profileId));
+            
+            if (profiles.length > 0) {
+                displayProfile(0); // Show the first profile in the updated list
+            } else {
+                document.querySelector('#profile-container').innerHTML = "<p>No matches found.</p>";
+            }
+            return;
+        }
     }
 
     if (response && response.ok) {  
         const data = await response.json();
-
-        // reset currentIndex to 0 if we're on the matches page
-        if (isMatchesPage) {
-            currentProfileIndex = 0;
-        } else {
-            currentProfileIndex++;
-        }
-
+        //console.log(data);
+        
+        currentProfileIndex++;
+        
         // load the next profile after a successful like/unlike action
         displayProfile(currentProfileIndex);
     }

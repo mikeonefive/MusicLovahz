@@ -19,7 +19,6 @@ async function createPaginationControls() {
         prevButton.querySelector('a').addEventListener('click', async (event) => {
             event.preventDefault();
             currentProfileIndex--;
-            console.log(currentProfileIndex);
             displayProfile(currentProfileIndex);
             createPaginationControls();
         });
@@ -39,7 +38,6 @@ async function createPaginationControls() {
         nextButton.querySelector('a').addEventListener('click', async (event) => {
             event.preventDefault();
             currentProfileIndex++;
-            console.log(currentProfileIndex);
             displayProfile(currentProfileIndex);
             createPaginationControls();
         });

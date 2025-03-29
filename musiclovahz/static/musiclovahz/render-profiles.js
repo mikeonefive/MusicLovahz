@@ -89,6 +89,7 @@ function displayProfile(index) {
 
 function createHTMLForSingleProfile(profile) {
   const profileContainer = document.querySelector('#profile-container');
+  profileContainer.setAttribute('data-profile-id', profile.id); 
 
   // create card for 'song likes'
   const songCard = createSongCard(profile);
@@ -102,7 +103,7 @@ function createHTMLForSingleProfile(profile) {
   // create card for 'songs in common'
   const songsInCommonCard = createSongsInCommonCard(profile);
   
-  // Append cards to the containers
+  // append cards to the containers
   pictureCard.appendChild(likeButtonContainer);
 
   profileContainer.appendChild(songCard);
