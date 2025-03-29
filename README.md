@@ -49,7 +49,17 @@ edit_profile.html: Form to update user information and add songs.
 
 show_profiles.html: Displays potential matches along with shared songs.
 
-static/musiclovahz/scripts.js: Handles AJAX-based like/unlike interactions for real-time UI updates.
+like-unlike-profile.js: Handles AJAX-based like/unlike interactions for real-time UI updates.
+
+add-song-form.js: Adds new song fields dynamically.
+
+csrf-handler.js: Gets the CSRF token.
+
+pagination.js: Dynamically displays/handles pagination controls for the matches page.
+
+render-profiles.js: Gets the relevant profiles from the backend and creates the frontend HTML views for profiles.
+
+show-chat-and-messages.js: Fetches the relevant messages from the backend and renders the frontend view for the app's chat functionality.
 
 How to Run the Application
 
