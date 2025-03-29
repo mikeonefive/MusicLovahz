@@ -26,20 +26,51 @@ async function showChatHistory(chatPartnerID) {
 
 
 function createChatCardView(data) {
-
     const chatCard = document.createElement('div');
     chatCard.classList.add('card', 'custom-chat-card');
 
     // data.messages.forEach(message => console.log(message.content));
+    
+    let messagesHTML = data.messages.map(msg => {
+        let messageRead = "";  
+        if (msg.sender === currentUser) {           // show read status only for messages sent by current user (currentUser gets passed in by Django in show_proiles.html)
+            messageRead = msg.read ? "<span class='message-read'>read ✓</span>" : "";
+        }
 
-    chatCard.innerHTML = `
-    <div class="card-body">
-        ${data.messages.map(msg => `
-            <strong>${msg.sender}</strong> said, 
-            <class='card-text'>"${msg.content}" 
-            <span class="message-date">${msg.datetime}</span>`)
-            .join('<br>')}
-    </div>`;
+        return `
+        <strong>${msg.sender}</strong> said, 
+        <span class="card-text">"${msg.content}"</span> 
+        <span class="message-date">${msg.datetime}</span>
+        <br>
+        ${messageRead}
+        `;
+    }).join('<br>');                                // combine all messages into one big string
+
+    chatCard.innerHTML = `<div class="card-body">${messagesHTML}</div>`;
+    return chatCard;
+}
+
+
+function createChatCardView(data) {
+    const chatCard = document.createElement('div');
+    chatCard.classList.add('card', 'custom-chat-card');
+
+    let messagesHTML = data.messages.map(msg => {
+        let messageRead = "";  
+        if (msg.sender === currentUser) {
+            messageRead = msg.read ? "<span class='message-read'>read ✓</span>" : "";
+        }
+
+        return `
+        <strong>${msg.sender}</strong> said, 
+        <span class="card-text">"${msg.content}"</span> 
+        <span class="message-date">${msg.datetime}</span>
+        <br>
+        ${messageRead}
+        `;
+    }).join('<br>');  // Combine all messages into one big string
+
+    chatCard.innerHTML = `<div class="card-body">${messagesHTML}</div>`;
 
     return chatCard;
 }
@@ -47,7 +78,6 @@ function createChatCardView(data) {
 
 function showComposeMessage(chatPartnerID) {
     const composeMessageContainer = document.querySelector('#send-message-view');
-    
     composeMessageContainer.innerHTML = "";
 
     // create form dynamically

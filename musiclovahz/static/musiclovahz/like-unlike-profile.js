@@ -29,7 +29,7 @@ async function updateLikes(event) {
     // check if the button has the class like-button or unlike-button
     if (button.classList.contains('like-button')) {
 
-        console.log(`Like button clicked for ${profileId}`);
+        // console.log(`Like button clicked for ${profileId}`);
 
         // update this profile's like (fetch call to the backend)
         response = await fetch(`/likes/${profileId}/`, {
@@ -55,7 +55,6 @@ async function updateLikes(event) {
 
     if (response && response.ok) {  
         const data = await response.json();
-        console.log(data);
 
         // reset currentIndex to 0 if we're on the matches page
         if (isMatchesPage) {

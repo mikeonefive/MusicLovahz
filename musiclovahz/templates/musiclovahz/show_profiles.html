@@ -38,4 +38,7 @@
     <script src="{% static 'musiclovahz/like-unlike-profile.js' %}"></script>
     <script src="{% static 'musiclovahz/csrf-handler.js' %}"></script>
     <script src="{% static 'musiclovahz/pagination.js' %}"></script>
+    <script>
+        var currentUser = "{{ request.user.username }}";  // pass the username from Django to JS
+    </script>
 {% endblock %}

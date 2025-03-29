@@ -112,10 +112,16 @@ html, body {
     /* border: 0; */
 }
 
-.message-date {
+.message-date, message-read {
     float: right;
     font-size: 0.7em;
     color: gray;
+}
+
+.message-read {
+    float: right;
+    font-size: 0.7em;
+    color: green;
 }
 
 .compose-form {

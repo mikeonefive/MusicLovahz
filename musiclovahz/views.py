@@ -170,6 +170,10 @@ def get_messages(request, chatpartner_id):
         Q(sender=chat_partner, recipient=current_user)
     ).order_by("timestamp")
 
+    # mark unread messages as read when the recipient views them
+    unread_messages = messages.filter(recipient=current_user, read=False)
+    unread_messages.update(read=True)
+
     # messages_data = [message.serialize() for message in messages]
     messages_data = []
     for message in messages:

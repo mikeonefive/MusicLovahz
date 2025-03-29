@@ -49,7 +49,7 @@ async function loadProfiles(url) {
       profiles = jsonData.profiles;
       currentProfileIndex = 0;
       displayProfile(currentProfileIndex);
-      console.log(profiles);
+      // console.log(profiles);
 
       if (isMatchesPage) {
         // previous and next buttons
