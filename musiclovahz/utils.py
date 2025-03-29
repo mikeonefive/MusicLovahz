@@ -6,13 +6,6 @@ import re
 NUMBER_OF_MUTUAL_SONGS = 3
 
 def find_users_by_songs(current_user):
-    # matching_users = (User.objects.filter(
-    #     songs__in=current_user.songs.all())
-    #     .exclude(id=current_user.id)
-    #     .exclude(id__in=current_user.matches.all()))  # exclude already matched users
-    #
-    # return matching_users
-
     matching_users = (
         User.objects.filter(
             songs__in=current_user.songs.all()
@@ -28,8 +21,6 @@ def find_users_by_songs(current_user):
         .filter(shared_songs__gte=NUMBER_OF_MUTUAL_SONGS)                                                               # gte = predefined meaning greater than or equal to
         .order_by('id')  # ensure consistent order for pagination
     )
-
-    # print(matching_users)
     return matching_users
 
 
@@ -38,7 +29,6 @@ def find_songs_in_common(current_user, matched_user):
                     .filter(users=current_user)
                     .filter(users=matched_user)
                     .distinct())
-    # print(f"Songs in common function: {mutual_songs}")
     return mutual_songs if mutual_songs.exists() else []
 
 
@@ -49,10 +39,7 @@ def update_matches(current_user, mutual_likes):
     for user in mutual_likes:
         user.matches.add(current_user)
 
-
     current_user.save()
-
-    # print(f"{current_user.matches} matches with {matching_users}")
 
 
 def get_users_who_like_each_other(current_user):
@@ -65,18 +52,10 @@ def get_users_who_like_each_other(current_user):
 
 def check_mutual_like_and_update_data(current_user):
     users_that_like_each_other = get_users_who_like_each_other(current_user)
-    # print(f"users like each other: {users_that_like_each_other} & {current_user}")
 
     if users_that_like_each_other.exists():  # exists is more efficient because it doesn't get all the data
-        # print(f"Mutual likes exist, updating matches.")
-
         update_matches(current_user, users_that_like_each_other)
-
-        # # show the matches page
-        # return render(request, "musiclovahz/show_profiles.html", {
-        #     "matches": users_that_like_each_other,
-        #     "songs_in_common": songs_in_common
-        # })
+        return True
 
 
 def convert_to_smart_title_case(text):

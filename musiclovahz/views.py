@@ -141,9 +141,10 @@ def like_unlike_profile(request, user_id):
         loggedin_user.likes.add(profile_to_update)
 
         # check if like is mutual and update data if necessary
-        check_mutual_like_and_update_data(loggedin_user)
+        if check_mutual_like_and_update_data(loggedin_user):
+            return JsonResponse({"message": f"You and {profile_to_update.username} like each other"}, status=201)
 
-        return JsonResponse({"message": f"You liked {profile_to_update.username}"}, status=201)
+        return JsonResponse({"message": f"You like {profile_to_update.username}"}, status=201)
         # return JsonResponse({}, status=201)           # 201 = new resource created by server
 
     elif request.method == "DELETE":
@@ -153,7 +154,7 @@ def like_unlike_profile(request, user_id):
         loggedin_user.matches.remove(profile_to_update)
         profile_to_update.matches.remove(loggedin_user)
 
-        return JsonResponse({"message": f"You unliked {profile_to_update.username}"}, status=200)
+        return JsonResponse({"message": f"You don't like {profile_to_update.username}"}, status=200)
         # return JsonResponse({}, status=200)     # empty JSON response ok
 
     return JsonResponse({"error": "Invalid request method"},
