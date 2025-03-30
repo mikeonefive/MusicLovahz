@@ -17,7 +17,9 @@ urlpatterns = [
     path("likes/<int:user_id>/", views.like_unlike_profile, name="like_unlike_profile"),
 
     path("messages/<int:chatpartner_id>", views.get_messages, name="get_messages"),
-    path("messages/send/<int:chatpartner_id>", views.send_message, name="send_message")
+    path("messages/send/<int:chatpartner_id>", views.send_message, name="send_message"),
+
+    path('get_audio_url', views.get_audio_url, name='get_audio_url')
 ]
 
 if settings.DEBUG:

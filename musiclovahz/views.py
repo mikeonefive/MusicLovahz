@@ -13,15 +13,17 @@ from .models import User, Song, Message
 
 from .utils import check_mutual_like_and_update_data, convert_to_smart_title_case, find_users_by_songs
 
+import yt_dlp
+
 
 def login_view(request):
     if request.method == "POST":
-        # Attempt to sign user in
+        # attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
 
-        # Check if authentication successful
+        # check if authentication successful
         if user is not None:
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
@@ -88,10 +90,10 @@ def edit_profile(request):
                     user.songs.add(song)    # add song to user's profile
 
 
-            return redirect("index")    # Redirect after saving, outside the for loop
+            return redirect("index")                                   # Redirect after saving, outside the for loop
 
     else:
-        form = UserProfileForm(instance=user)                                  # pre-fill with existing user data
+        form = UserProfileForm(instance=user)                          # pre-fill with existing user data
 
     return render(request, "musiclovahz/edit_profile.html", {
         "form": form
@@ -208,3 +210,27 @@ def send_message(request, chatpartner_id):
 
     return JsonResponse(message.serialize(),
                         status=201)
+
+
+def get_audio_url(request):
+    query = request.GET.get("query", "")
+
+    if not query:
+        return JsonResponse({"error": "No query provided"}, status=400)
+
+    ydl_opts = {"quiet": True,
+                "default_search": "ytsearch1",
+                "format": "bestaudio[ext=m4a]/best",
+                "noplaylist": True,
+                "extractaudio": True}
+
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        try:
+            # fetch the video/audio info
+            info = ydl.extract_info(query, download=False)
+            audio_url = info["entries"][0]["url"]  # get the best audio stream URL, first entry in the list of media
+        except Exception as e:
+            # in case something goes wrong (invalid query or no result)
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"audio_url": audio_url})

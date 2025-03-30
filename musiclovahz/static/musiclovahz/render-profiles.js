@@ -149,14 +149,34 @@ function createLikeButtons(profile) {
 function createSongCard(profile) {
   const songCard = document.createElement('div');
   songCard.classList.add('col-md-4', 'col-sm-6', 'mt-2');
-  songCard.innerHTML = `
-      <div class="card bg-dark border-0 p-3 text-center">
-          <p class="text-light mb-1">${profile.username} likes</p>
-          ${profile.songs.map(song => `
-              <p class="text-muted small mb-0">"${song.title}" by ${song.artist}</p>
-          `).join('')}
-      </div>
-  `;
+
+  // card container
+  const card = document.createElement('div');
+  card.classList.add('card', 'bg-dark', 'border-0', 'p-3', 'text-center');
+  
+  // text content
+  const textContent = document.createElement('p');
+  textContent.classList.add('text-light', 'mb-1');
+  textContent.textContent = `${profile.username} likes`;
+
+  // append text content to the card
+  card.appendChild(textContent);
+
+  // iterate over songs and add each one
+  profile.songs.forEach(song => {
+    const songText = document.createElement('p');
+    songText.classList.add('text-muted', 'small', 'mb-0');
+    songText.innerHTML = `"${song.title}" by ${song.artist} `;
+    
+    // create the audio player and append it
+    const audioPlayer = createAudioPlayer(song.title, song.artist);
+    songText.appendChild(audioPlayer);  
+    card.appendChild(songText);  // add the song text with audio player to the card
+  });
+
+  // Append the card to the song card container
+  songCard.appendChild(card);
+
   return songCard;
 }
 

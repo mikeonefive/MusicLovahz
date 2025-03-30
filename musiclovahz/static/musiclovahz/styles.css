@@ -43,7 +43,7 @@ html, body {
 
 .card {
     border-radius: 0.375rem;       /* match rounded edges for bootstrap cards */
-    max-width: 300px;              /* cards a bit smaller on larger screens */
+    max-width: 400px;              /* cards a bit smaller on larger screens */
     margin: 0 auto;                 /* center the cards */
 }
 
@@ -86,6 +86,16 @@ html, body {
     transform: scale(1.4);          /* grows without affecting layout */
 }
 
+/* PLAY AND PAUSE BUTTON APPEARANCE */
+.audio-button {
+    color: white;
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 0.5vw;
+    font-family: "Courier New", monospace;
+    font-size: 1.3vh;
+}
 
 /* PAGINATION CONTROLS MATCHES PAGE */
 .page-link {
