@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play YouTube Audio</title>
+</head>
+<body>
+    <!-- Custom Play and Stop buttons -->
+    <button id="playButton" onclick="fetchAndPlay()">▶</button>
+    <button id="stopButton" onclick="stopSong()">⏹</button>
+
+    <!-- Audio player without built-in controls -->
+    <audio id="audioPlayer" preload="auto"></audio>
+
+    <script>
+        let isSongFetched = false; // Track whether the song URL has been fetched
+        let audioPlayer = document.getElementById("audioPlayer");
+
+        async function fetchAndPlay() {
+            if (!isSongFetched) {
+                const query = "It's my job to keep punk rock elite"; // Song you want to search
+                const encodedQuery = encodeURIComponent(query); // Ensure it's URL encoded
+
+                const response = await fetch(`/get_audio_url?query=${encodedQuery}`);
+
+                if (!response.ok) {
+                    console.error('Failed to fetch audio URL');
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (data.audio_url) {
+                    audioPlayer.src = data.audio_url;  // Set the audio source to the fetched URL
+                    audioPlayer.loop = true;
+
+                    // Wait for the audio to be ready to play
+                    audioPlayer.oncanplaythrough = function() {
+                        // Now that the audio is ready, trigger play
+                        audioPlayer.play()
+                            .catch(error => {
+                                console.error("Error playing the audio:", error);
+                            });
+                    };
+
+                    isSongFetched = true;
+                } else {
+                    console.error('Audio URL not found in the response');
+                }
+
+            } else {
+                // If the song is already fetched, just play it if it's paused
+                if (audioPlayer.paused) {
+                    audioPlayer.play()
+                        .catch(error => {
+                            console.error("Error playing the audio:", error);
+                        });
+                }
+            }
+        }
+
+        function stopSong() {
+            audioPlayer.pause();
+        }
+    </script>
+</body>
+</html>

@@ -61,6 +61,10 @@ render-profiles.js: Gets the relevant profiles from the backend and creates the 
 
 show-chat-and-messages.js: Fetches the relevant messages from the backend and renders the frontend view for the app's chat functionality.
 
+Used Libraries
+
+yt_dlp (fetching urls and songs from youtube) 
+
 How to Run the Application
 
 Set Up the Virtual Environment
