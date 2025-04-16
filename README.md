@@ -30,11 +30,13 @@ Project Files and Their Contents
 
 Backend Files
 
-models.py: Defines the User model with songs, likes, and matches relationships, as well as the Song model.
+admin.py: The Django admin interface was customized for better usability. Songs and users are displayed with key attributes like title, artist, and email for quick access. Filter_horizontal widgets were added to allow easy management of many-to-many fields like songs, likes, and matches directly from the admin panel. Message objects are shown using their serialized representation, making it easier to inspect chat content and troubleshoot during development.
+
+models.py: Defines the User model with songs, likes, and matches relationships, as well as the Song and Message model. The default Django user model was extended to support complex social features. Custom many-to-many relationships handle likes, unlikes, and mutual matches, while profile_picture adds optional user personalization. Songs are stored with title and artist info for user preferences. Messages are timestamped, support read tracking, and are serialized for easy integration with AJAX-based chat.
 
 forms.py: Contains UserProfileForm for updating profiles and CustomUserCreationForm for user registration.
 
-views.py: Handles user authentication, profile editing, matchmaking logic, likes/matches updates, sending/receiving messages, and fetching the URLs for audio playback.
+views.py: Handles user authentication, profile editing, matchmaking logic, likes/matches updates, sending/receiving messages, and fetching the URLs for audio playback. The views in this file handle user authentication, profile management, and matchmaking. The login, registration, and profile edit functionality allow users to interact with their accounts, while AJAX-based endpoints enable liking, unliking, and messaging other users. Additionally, an audio player is integrated with yt_dlp to stream audio previews from YouTube, adding another interactive element to the experience.
 
 urls.py: Maps frontend requests to appropriate Django views.
 
