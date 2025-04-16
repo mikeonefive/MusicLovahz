@@ -22,6 +22,10 @@ Pagination and Frontend Integration: To ensure a smooth user experience, I imple
 
 AJAX-Based Like System: The like functionality involves asynchronous JavaScript interactions with Django views to provide real-time feedback on user actions.
 
+Messages: Matched users can send and receive messages through a simple chat interface. Messages are stored with sender, recipient, timestamp, and a read status for better interaction tracking. Messages between users are retrieved in chronological order, and any unread messages are automatically marked as read when viewed by the recipient. Message sending is handled via asynchronous POST requests, allowing real-time communication without reloading the page. While it doesn’t use sockets, the integration was still challenging to implement due to user authentication, error handling, and dynamic updates.
+
+Custom Audio Player: Songs can be previewed directly in the browser using dynamically fetched audio streams via yt_dlp. Users hear real samples without downloading files or opening external tabs. A lightweight, JavaScript-based player lets users play or stop previews. Each button triggers asynchronous fetching of the best-quality audio URL, with caching to minimize repeated requests.
+
 Project Files and Their Contents
 
 Backend Files
@@ -30,7 +34,7 @@ models.py: Defines the User model with songs, likes, and matches relationships, 
 
 forms.py: Contains UserProfileForm for updating profiles and CustomUserCreationForm for user registration.
 
-views.py: Handles user authentication, profile editing, matchmaking logic, and likes/matches updates.
+views.py: Handles user authentication, profile editing, matchmaking logic, likes/matches updates, sending/receiving messages, and fetching the URLs for audio playback.
 
 urls.py: Maps frontend requests to appropriate Django views.
 
@@ -40,6 +44,10 @@ utils.py: This file contains helper functions that streamline the matchmaking lo
 Frontend Files
 
 templates/musiclovahz/
+
+audio_player_test.html: Easy implementation for an audio player in a test file.
+
+layout.html: Basic layout for the project.
 
 login.html: User authentication page.
 
@@ -53,6 +61,8 @@ like-unlike-profile.js: Handles AJAX-based like/unlike interactions for real-tim
 
 add-song-form.js: Adds new song fields dynamically.
 
+audio-player.js: Audio player functionality for fetching the URLs and playing the songs in the profile cards.
+
 csrf-handler.js: Gets the CSRF token.
 
 pagination.js: Dynamically displays/handles pagination controls for the matches page.
@@ -60,6 +70,8 @@ pagination.js: Dynamically displays/handles pagination controls for the matches 
 render-profiles.js: Gets the relevant profiles from the backend and creates the frontend HTML views for profiles.
 
 show-chat-and-messages.js: Fetches the relevant messages from the backend and renders the frontend view for the app's chat functionality.
+
+styles.css: Custom style sheet.
 
 Used Libraries
 
